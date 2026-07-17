@@ -1,19 +1,15 @@
 /**
  * LandingPage Component
- * 
- * Public home page with hero section, stats bar, features grid,
- * and CTA banner. Uses Navbar and Footer for consistent navigation.
+ * Public home page with hero, stats, features, and CTA.
  */
 
-import { useState } from 'react';
-import { COLORS, FONTS } from '../constants/theme';
+import { COLORS, FONTS, APP_CONFIG } from '../constants/theme';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Card from '../components/Card';
+import { Button } from '../components/ui';
 
 export default function LandingPage({ onNavigate }) {
-  const [hoveredButton, setHoveredButton] = useState(null);
-
   const features = [
     { icon: '📶', title: 'WiFi Registration', desc: 'Quick and easy device registration for campus network access' },
     { icon: '📊', title: 'Real-Time Monitoring', desc: 'Track bandwidth usage and network performance in real-time' },
@@ -28,108 +24,37 @@ export default function LandingPage({ onNavigate }) {
       <Navbar currentPage="landing" onNavigate={onNavigate} />
 
       {/* Hero Section */}
-      <section
-        style={{
-          background: COLORS.backgrounds.gradient,
-          padding: '100px 40px',
-          textAlign: 'center',
-        }}
-      >
-        <h1
-          style={{
-            fontSize: '48px',
-            fontWeight: 'bold',
-            color: COLORS.text.gold,
-            fontFamily: FONTS.primary,
-            marginBottom: '20px',
-            lineHeight: '1.2',
-          }}
-        >
-          WildConnect — Intelligent Bandwidth Management for CITU
+      <section style={{ background: COLORS.backgrounds.gradient, padding: '100px 40px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '48px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary, marginBottom: '20px', lineHeight: '1.2' }}>
+          Waykonnek-CITU — Intelligent Bandwidth Management for CITU
         </h1>
-        <p
-          style={{
-            fontSize: '20px',
-            color: COLORS.text.white,
-            fontFamily: FONTS.primary,
-            marginBottom: '40px',
-            maxWidth: '800px',
-            margin: '0 auto 40px',
-            lineHeight: '1.6',
-          }}
-        >
+        <p style={{ fontSize: '20px', color: COLORS.text.white, fontFamily: FONTS.primary, marginBottom: '40px', maxWidth: '800px', margin: '0 auto 40px', lineHeight: '1.6' }}>
           Empowering Cebu Institute of Technology – University with smart network monitoring,
-          fair bandwidth allocation, and seamless connectivity for over 12,000 users.
+          fair bandwidth allocation, and seamless connectivity for over {APP_CONFIG.TOTAL_USERS.toLocaleString()} users.
         </p>
         <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
-          <button
-            onMouseEnter={() => setHoveredButton('get-started')}
-            onMouseLeave={() => setHoveredButton(null)}
-            onClick={() => onNavigate('register')}
-            style={{
-              backgroundColor: hoveredButton === 'get-started' ? COLORS.gold.light : COLORS.gold.primary,
-              color: COLORS.maroon.dark,
-              border: 'none',
-              padding: '16px 32px',
-              fontSize: '18px',
-              fontWeight: 'bold',
-              fontFamily: FONTS.primary,
-              borderRadius: '8px',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              transform: hoveredButton === 'get-started' ? 'translateY(-2px)' : 'translateY(0)',
-              boxShadow: hoveredButton === 'get-started' ? '0 6px 20px rgba(212,168,67,0.4)' : '0 4px 12px rgba(0,0,0,0.3)',
-            }}
-          >
+          <Button onClick={() => onNavigate('register')} padding="16px 32px" style={{ fontSize: '18px' }}>
             Get Started →
-          </button>
-          <button
-            onMouseEnter={() => setHoveredButton('learn-more')}
-            onMouseLeave={() => setHoveredButton(null)}
-            onClick={() => onNavigate('about')}
-            style={{
-              backgroundColor: hoveredButton === 'learn-more' ? COLORS.maroon.light : COLORS.maroon.medium,
-              color: COLORS.text.gold,
-              border: `2px solid ${COLORS.gold.primary}`,
-              padding: '16px 32px',
-              fontSize: '18px',
-              fontWeight: 'bold',
-              fontFamily: FONTS.primary,
-              borderRadius: '8px',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              transform: hoveredButton === 'learn-more' ? 'translateY(-2px)' : 'translateY(0)',
-            }}
-          >
+          </Button>
+          <Button variant="secondary" onClick={() => onNavigate('about')} padding="16px 32px" style={{ fontSize: '18px' }}>
             Learn More
-          </button>
+          </Button>
         </div>
       </section>
 
       {/* Stats Bar */}
-      <section
-        style={{
-          backgroundColor: COLORS.maroon.dark,
-          borderTop: `2px solid ${COLORS.gold.border}`,
-          borderBottom: `2px solid ${COLORS.gold.border}`,
-          padding: '30px 40px',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-around',
-            maxWidth: '1200px',
-            margin: '0 auto',
-            flexWrap: 'wrap',
-            gap: '20px',
-          }}
-        >
+      <section style={{
+        backgroundColor: COLORS.maroon.dark,
+        borderTop: `2px solid ${COLORS.gold.border}`,
+        borderBottom: `2px solid ${COLORS.gold.border}`,
+        padding: '30px 40px',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-around', maxWidth: '1200px', margin: '0 auto', flexWrap: 'wrap', gap: '20px' }}>
           {[
-            { value: '12,000+', label: 'Users' },
+            { value: APP_CONFIG.TOTAL_USERS.toLocaleString() + '+', label: 'Users' },
             { value: '98%', label: 'Uptime' },
-            { value: '40 Gbps', label: 'Bandwidth' },
-            { value: '3,200+', label: 'Devices' },
+            { value: `${APP_CONFIG.TOTAL_BANDWIDTH_GBPBS} Gbps`, label: 'Bandwidth' },
+            { value: APP_CONFIG.TOTAL_REGISTERED_DEVICES.toLocaleString() + '+', label: 'Devices' },
           ].map((stat, idx) => (
             <div key={idx} style={{ textAlign: 'center' }}>
               <div style={{ fontSize: '32px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary }}>
@@ -145,27 +70,10 @@ export default function LandingPage({ onNavigate }) {
 
       {/* Features Section */}
       <section style={{ padding: '80px 40px', flex: 1, backgroundColor: COLORS.bgPage }}>
-        <h2
-          style={{
-            textAlign: 'center',
-            fontSize: '36px',
-            fontWeight: 'bold',
-            color: COLORS.textHeading,
-            fontFamily: FONTS.primary,
-            marginBottom: '60px',
-          }}
-        >
+        <h2 style={{ textAlign: 'center', fontSize: '36px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '60px' }}>
           Powerful Features
         </h2>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '30px',
-            maxWidth: '1200px',
-            margin: '0 auto',
-          }}
-        >
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px', maxWidth: '1200px', margin: '0 auto' }}>
           {features.map((feature, idx) => (
             <Card key={idx}>
               <div style={{ textAlign: 'center' }}>
@@ -183,41 +91,19 @@ export default function LandingPage({ onNavigate }) {
       </section>
 
       {/* CTA Banner */}
-      <section
-        style={{
-          background: `linear-gradient(135deg, ${COLORS.maroon.medium} 0%, ${COLORS.maroon.light} 100%)`,
-          padding: '60px 40px',
-          textAlign: 'center',
-          borderTop: `2px solid ${COLORS.gold.border}`,
-        }}
-      >
+      <section style={{
+        background: `linear-gradient(135deg, ${COLORS.maroon.medium} 0%, ${COLORS.maroon.light} 100%)`,
+        padding: '60px 40px', textAlign: 'center', borderTop: `2px solid ${COLORS.gold.border}`,
+      }}>
         <h2 style={{ fontSize: '32px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary, marginBottom: '20px' }}>
           Ready to Get Started?
         </h2>
         <p style={{ fontSize: '18px', color: COLORS.text.white, fontFamily: FONTS.primary, marginBottom: '30px' }}>
           Join thousands of CITU users enjoying optimized network connectivity
         </p>
-        <button
-          onMouseEnter={() => setHoveredButton('register')}
-          onMouseLeave={() => setHoveredButton(null)}
-          onClick={() => onNavigate('register')}
-          style={{
-            backgroundColor: hoveredButton === 'register' ? COLORS.gold.light : COLORS.gold.primary,
-            color: COLORS.maroon.dark,
-            border: 'none',
-            padding: '16px 40px',
-            fontSize: '18px',
-            fontWeight: 'bold',
-            fontFamily: FONTS.primary,
-            borderRadius: '8px',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            transform: hoveredButton === 'register' ? 'translateY(-2px)' : 'translateY(0)',
-            boxShadow: hoveredButton === 'register' ? '0 6px 20px rgba(212,168,67,0.4)' : '0 4px 12px rgba(0,0,0,0.3)',
-          }}
-        >
+        <Button onClick={() => onNavigate('register')} padding="16px 40px" style={{ fontSize: '18px' }}>
           Register Now
-        </button>
+        </Button>
       </section>
 
       <Footer onNavigate={onNavigate} />
