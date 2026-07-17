@@ -16,22 +16,31 @@ import BandwidthMonitorPage from './pages/BandwidthMonitorPage';
 import WifiRegistrationPage from './pages/WifiRegistrationPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 
+const PUBLIC_PAGES = ['landing', 'login', 'register', 'forgot-password', 'about', 'contact'];
+
 function getInitialUser() {
   if (!authService.isAuthenticated()) {
     return { schoolId: '', role: '', firstName: '', lastName: '', email: '', course: '', year: '', contactNumber: '' };
   }
 
-  const user = authService.getCurrentUser();
-  return {
-    schoolId: user?.schoolId || '',
-    role: user?.role === 'ADMIN' ? 'admin' : 'student',
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    email: user?.email || '',
-    course: user?.course || '',
-    year: user?.year || '',
-    contactNumber: user?.contactNumber || '',
-  };
+  try {
+    const user = authService.getCurrentUser();
+    if (!user) {
+      return { schoolId: '', role: '', firstName: '', lastName: '', email: '', course: '', year: '', contactNumber: '' };
+    }
+    return {
+      schoolId: user.schoolId || '',
+      role: user.role === 'ADMIN' ? 'admin' : 'student',
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      email: user.email || '',
+      course: user.course || '',
+      year: user.year || '',
+      contactNumber: user.contactNumber || '',
+    };
+  } catch {
+    return { schoolId: '', role: '', firstName: '', lastName: '', email: '', course: '', year: '', contactNumber: '' };
+  }
 }
 
 export default function App() {
@@ -41,6 +50,20 @@ export default function App() {
   });
   const [isLoggedIn, setIsLoggedIn] = useState(authService.isAuthenticated());
   const [user, setUser] = useState(getInitialUser);
+
+  // Redirect unauthorized users away from protected pages
+  useEffect(() => {
+    if (!isLoggedIn && !PUBLIC_PAGES.includes(currentPage)) {
+      setCurrentPage('login');
+    }
+  }, [isLoggedIn, currentPage]);
+
+  // Redirect non-admin users away from admin pages
+  useEffect(() => {
+    if (isLoggedIn && currentPage === 'admin-panel' && user.role !== 'admin') {
+      setCurrentPage('dashboard');
+    }
+  }, [isLoggedIn, currentPage, user.role]);
 
   // Auto-hydrate profile if logged in but data is missing
   useEffect(() => {
@@ -52,9 +75,7 @@ export default function App() {
             handleUpdateUser(userData);
           }
         })
-        .catch(() => {
-          // Silent fail - profile might not be available or token expired
-        });
+        .catch(() => {});
     }
   }, [isLoggedIn]);
 
@@ -67,7 +88,6 @@ export default function App() {
   // Login handler
   const handleLogin = (data) => {
     setIsLoggedIn(true);
-    // Handle both flat and nested user data
     const userData = data.user || data;
     setUser({
       schoolId: userData.schoolId || '',
@@ -85,7 +105,6 @@ export default function App() {
   // Register handler
   const handleRegister = (data) => {
     setIsLoggedIn(true);
-    // Handle both flat and nested user data
     const userData = data.user || data;
     setUser({
       schoolId: userData.schoolId || '',
@@ -123,23 +142,12 @@ export default function App() {
     navigate('landing');
   };
 
-  // AUTH GUARD (Private Route logic)
-  const requireAuth = (component) => {
-    return isLoggedIn ? component : (navigate('login'), null);
-  };
-
-  // ADMIN GUARD
-  const requireAdmin = (component) => {
-    return user.role === 'admin' ? component : (navigate('dashboard'), null);
-  };
-
   const renderPage = () => {
     const userName = user.schoolId;
     const userRole = user.role;
     const userDisplayName = user.firstName ? `${user.firstName} ${user.lastName}` : user.schoolId;
 
     switch (currentPage) {
-
       case 'landing':
         return <LandingPage onNavigate={navigate} />;
 
@@ -159,7 +167,8 @@ export default function App() {
         return <ContactPage onNavigate={navigate} />;
 
       case 'dashboard':
-        return requireAuth(
+        if (!isLoggedIn) return null;
+        return (
           <DashboardPage
             onNavigate={navigate}
             onLogout={handleLogout}
@@ -171,7 +180,8 @@ export default function App() {
         );
 
       case 'my-account':
-        return requireAuth(
+        if (!isLoggedIn) return null;
+        return (
           <MyAccountPage
             onNavigate={navigate}
             onLogout={handleLogout}
@@ -183,7 +193,8 @@ export default function App() {
         );
 
       case 'bandwidth-monitor':
-        return requireAuth(
+        if (!isLoggedIn) return null;
+        return (
           <BandwidthMonitorPage
             onNavigate={navigate}
             onLogout={handleLogout}
@@ -193,7 +204,8 @@ export default function App() {
         );
 
       case 'wifi-registration':
-        return requireAuth(
+        if (!isLoggedIn) return null;
+        return (
           <WifiRegistrationPage
             onNavigate={navigate}
             onLogout={handleLogout}
@@ -203,13 +215,12 @@ export default function App() {
         );
 
       case 'admin-panel':
-        return requireAuth(
-          requireAdmin(
-            <AdminDashboardPage
-              onNavigate={navigate}
-              onLogout={handleLogout}
-            />
-          )
+        if (!isLoggedIn || user.role !== 'admin') return null;
+        return (
+          <AdminDashboardPage
+            onNavigate={navigate}
+            onLogout={handleLogout}
+          />
         );
 
       default:

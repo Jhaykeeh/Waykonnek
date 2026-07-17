@@ -1,9 +1,6 @@
 /**
  * RegisterPage Component
- * 
- * User registration page with centered card layout. Includes fields for
- * First Name, Last Name, School ID, Email, Role, Password, and Confirm Password.
- * Full validation, loading state, and terms checkbox.
+ * User registration page with centered card layout.
  */
 
 import { useState } from 'react';
@@ -12,6 +9,7 @@ import { COLORS, FONTS } from '../constants/theme';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Card from '../components/Card';
+import { Button, Input } from '../components/ui';
 
 export default function RegisterPage({ onNavigate, onRegister }) {
   const [formData, setFormData] = useState({
@@ -29,8 +27,6 @@ export default function RegisterPage({ onNavigate, onRegister }) {
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [hoveredButton, setHoveredButton] = useState(null);
-  const [focusedField, setFocusedField] = useState(null);
   const [formError, setFormError] = useState('');
 
   const handleChange = (e) => {
@@ -54,7 +50,6 @@ export default function RegisterPage({ onNavigate, onRegister }) {
     if (!formData.course.trim()) newErrors.course = 'Course is required';
     if (!formData.year.trim()) newErrors.year = 'Year level is required';
     if (!formData.contactNumber.trim()) newErrors.contactNumber = 'Contact number is required';
-    
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
@@ -83,21 +78,14 @@ export default function RegisterPage({ onNavigate, onRegister }) {
         schoolId: formData.schoolId,
         password: formData.password,
         email: formData.email,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
         course: formData.course,
         year: formData.year,
         contactNumber: formData.contactNumber,
         role: formData.role,
       });
 
-      // Pass the complete user data to App state, 
-      // prioritizing server response but falling back to form data
-      const userData = response.user || response;
-      onRegister({
-        ...formData,
-        ...userData
-      });
+      const userData = data.user || data;
+      onRegister({ ...formData, ...userData });
       onNavigate('dashboard');
     } catch (err) {
       const msg = err.response?.data?.message || 'Registration failed. Please try again.';
@@ -107,171 +95,54 @@ export default function RegisterPage({ onNavigate, onRegister }) {
     }
   };
 
-  const inputStyle = (fieldName) => ({
-    width: '100%',
-    padding: '12px 16px',
-    backgroundColor: COLORS.bgInput,
-    border: `2px solid ${errors[fieldName] ? '#ff4444' : focusedField === fieldName ? COLORS.gold.primary : COLORS.gold.border}`,
-    borderRadius: '8px',
-    color: COLORS.maroon.card,
-    fontFamily: fieldName === 'schoolId' ? FONTS.mono : FONTS.primary,
-    fontSize: '14px',
-    outline: 'none',
-    transition: 'all 0.3s ease',
-    boxShadow: focusedField === fieldName ? `0 0 8px ${COLORS.gold.primary}` : 'none',
-    boxSizing: 'border-box',
-  });
-
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar currentPage="register" onNavigate={onNavigate} />
 
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '60px 40px',
-          backgroundColor: COLORS.bgPage,
-        }}
-      >
+      <div style={{
+        flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '60px 40px', backgroundColor: COLORS.bgPage,
+      }}>
         <Card style={{ width: '100%', maxWidth: '700px', padding: '0' }}>
-          {/* Header Bar */}
-          <div
-            style={{
-              backgroundColor: COLORS.maroon.medium,
-              padding: '24px 32px',
-              borderBottom: `2px solid ${COLORS.gold.border}`,
-              borderRadius: '12px 12px 0 0',
-            }}
-          >
+          <div style={{
+            backgroundColor: COLORS.maroon.medium, padding: '24px 32px',
+            borderBottom: `2px solid ${COLORS.gold.border}`, borderRadius: '12px 12px 0 0',
+          }}>
             <h2 style={{ fontSize: '28px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary, margin: 0 }}>
               Create Your Account
             </h2>
             <p style={{ fontSize: '14px', color: COLORS.text.mutedGold, fontFamily: FONTS.primary, margin: '8px 0 0 0' }}>
-              Join WildConnect and manage your campus network access
+              Join Waykonnek-CITU and manage your campus network access
             </p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} style={{ padding: '32px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {/* First Name & Last Name */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('firstName')}
-                    onBlur={() => setFocusedField(null)}
-                    style={inputStyle('firstName')}
-                  />
-                  {errors.firstName && (
-                    <p style={{ color: '#ff4444', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '6px', marginBottom: 0 }}>
-                      {errors.firstName}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('lastName')}
-                    onBlur={() => setFocusedField(null)}
-                    style={inputStyle('lastName')}
-                  />
-                  {errors.lastName && (
-                    <p style={{ color: '#ff4444', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '6px', marginBottom: 0 }}>
-                      {errors.lastName}
-                    </p>
-                  )}
-                </div>
+                <Input label="First Name" name="firstName" value={formData.firstName}
+                  onChange={handleChange} error={errors.firstName} />
+                <Input label="Last Name" name="lastName" value={formData.lastName}
+                  onChange={handleChange} error={errors.lastName} />
               </div>
 
-              {/* School ID */}
-              <div>
-                <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                  School ID
-                </label>
-                <input
-                  type="text"
-                  name="schoolId"
-                  value={formData.schoolId}
-                  onChange={handleChange}
-                  onFocus={() => setFocusedField('schoolId')}
-                  onBlur={() => setFocusedField(null)}
-                  style={inputStyle('schoolId')}
-                />
-                {errors.schoolId && (
-                  <p style={{ color: '#ff4444', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '6px', marginBottom: 0 }}>
-                    {errors.schoolId}
-                  </p>
-                )}
-              </div>
+              <Input label="School ID" name="schoolId" value={formData.schoolId}
+                onChange={handleChange} error={errors.schoolId} mono />
 
-              <div>
-                <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  onFocus={() => setFocusedField('email')}
-                  onBlur={() => setFocusedField(null)}
-                  style={inputStyle('email')}
-                />
-                {errors.email && (
-                  <p style={{ color: '#ff4444', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '6px', marginBottom: 0 }}>
-                    {errors.email}
-                  </p>
-                )}
-              </div>
+              <Input label="Email" type="email" name="email" value={formData.email}
+                onChange={handleChange} error={errors.email} />
 
-              {/* Course & Year Level */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                <Input label="Course" name="course" placeholder="e.g. BSCS"
+                  value={formData.course} onChange={handleChange} error={errors.course} />
                 <div>
-                  <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    Course
-                  </label>
-                  <input
-                    type="text"
-                    name="course"
-                    placeholder="e.g. BSCS"
-                    value={formData.course}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('course')}
-                    onBlur={() => setFocusedField(null)}
-                    style={inputStyle('course')}
-                  />
-                  {errors.course && (
-                    <p style={{ color: '#ff4444', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '6px', marginBottom: 0 }}>
-                      {errors.course}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    Year Level
-                  </label>
-                  <select
-                    name="year"
-                    value={formData.year}
-                    onChange={handleChange}
-                    style={inputStyle('year')}
-                  >
+                  <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '13px', fontWeight: 'bold', marginBottom: '6px' }}>Year Level</label>
+                  <select name="year" value={formData.year} onChange={handleChange}
+                    style={{
+                      width: '100%', padding: '11px 14px', backgroundColor: COLORS.bgInput,
+                      border: `1px solid ${COLORS.gold.border}`, borderRadius: '8px',
+                      color: COLORS.maroon.card, fontFamily: FONTS.primary, fontSize: '14px',
+                      outline: 'none', boxSizing: 'border-box',
+                    }}>
                     <option value="">Select Year</option>
                     <option value="1st Year">1st Year</option>
                     <option value="2nd Year">2nd Year</option>
@@ -279,111 +150,45 @@ export default function RegisterPage({ onNavigate, onRegister }) {
                     <option value="4th Year">4th Year</option>
                     <option value="5th Year">5th Year</option>
                   </select>
-                  {errors.year && (
-                    <p style={{ color: '#ff4444', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '6px', marginBottom: 0 }}>
-                      {errors.year}
-                    </p>
-                  )}
+                  {errors.year && <p style={{ color: '#e53935', fontFamily: FONTS.primary, fontSize: '12px', margin: '5px 0 0' }}>{errors.year}</p>}
                 </div>
               </div>
 
-              {/* Contact Number */}
-              <div>
-                <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                  Contact Number
-                </label>
-                <input
-                  type="text"
-                  name="contactNumber"
-                  placeholder="e.g. 09123456789"
-                  value={formData.contactNumber}
-                  onChange={handleChange}
-                  onFocus={() => setFocusedField('contactNumber')}
-                  onBlur={() => setFocusedField(null)}
-                  style={inputStyle('contactNumber')}
-                />
-                {errors.contactNumber && (
-                  <p style={{ color: '#ff4444', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '6px', marginBottom: 0 }}>
-                    {errors.contactNumber}
-                  </p>
-                )}
-              </div>
+              <Input label="Contact Number" name="contactNumber" placeholder="e.g. 09123456789"
+                value={formData.contactNumber} onChange={handleChange} error={errors.contactNumber} />
 
-              {/* Role */}
               <div>
-                <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                  Role
-                </label>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  style={inputStyle('role')}
-                >
+                <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '13px', fontWeight: 'bold', marginBottom: '6px' }}>Role</label>
+                <select name="role" value={formData.role} onChange={handleChange}
+                  style={{
+                    width: '100%', padding: '11px 14px', backgroundColor: COLORS.bgInput,
+                    border: `1px solid ${COLORS.gold.border}`, borderRadius: '8px',
+                    color: COLORS.maroon.card, fontFamily: FONTS.primary, fontSize: '14px',
+                    outline: 'none', boxSizing: 'border-box',
+                  }}>
                   <option value="Student">Student</option>
                   <option value="Faculty">Faculty</option>
                   <option value="Staff">Staff</option>
                 </select>
               </div>
 
-              {/* Password & Confirm Password */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('password')}
-                    onBlur={() => setFocusedField(null)}
-                    style={inputStyle('password')}
-                  />
-                  {errors.password && (
-                    <p style={{ color: '#ff4444', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '6px', marginBottom: 0 }}>
-                      {errors.password}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    onFocus={() => setFocusedField('confirmPassword')}
-                    onBlur={() => setFocusedField(null)}
-                    style={inputStyle('confirmPassword')}
-                  />
-                  {errors.confirmPassword && (
-                    <p style={{ color: '#ff4444', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '6px', marginBottom: 0 }}>
-                      {errors.confirmPassword}
-                    </p>
-                  )}
-                </div>
+                <Input label="Password" type="password" name="password"
+                  value={formData.password} onChange={handleChange} error={errors.password} />
+                <Input label="Confirm Password" type="password" name="confirmPassword"
+                  value={formData.confirmPassword} onChange={handleChange} error={errors.confirmPassword} />
               </div>
 
-              {/* Terms Checkbox */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <input
-                  type="checkbox"
-                  name="agreeTerms"
-                  checked={formData.agreeTerms}
-                  onChange={handleChange}
-                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
-                />
+                <input type="checkbox" name="agreeTerms" checked={formData.agreeTerms}
+                  onChange={handleChange} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
                 <span style={{ color: COLORS.textBody, fontFamily: FONTS.primary, fontSize: '14px' }}>
                   I agree to the{' '}
                   <span style={{ color: COLORS.text.gold, textDecoration: 'underline', cursor: 'pointer' }}>Terms of Service</span>
                 </span>
               </div>
               {errors.agreeTerms && (
-                <p style={{ color: '#ff4444', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '-10px', marginBottom: 0 }}>
+                <p style={{ color: '#e53935', fontFamily: FONTS.primary, fontSize: '12px', marginTop: '-10px', marginBottom: 0 }}>
                   {errors.agreeTerms}
                 </p>
               )}
@@ -398,49 +203,17 @@ export default function RegisterPage({ onNavigate, onRegister }) {
                 </div>
               )}
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                onMouseEnter={() => setHoveredButton('register')}
-                onMouseLeave={() => setHoveredButton(null)}
-                style={{
-                  backgroundColor: isLoading ? COLORS.gold.muted : hoveredButton === 'register' ? COLORS.gold.light : COLORS.gold.primary,
-                  color: COLORS.maroon.dark,
-                  border: 'none',
-                  padding: '14px',
-                  fontSize: '16px',
-                  fontWeight: 'bold',
-                  fontFamily: FONTS.primary,
-                  borderRadius: '8px',
-                  cursor: isLoading ? 'not-allowed' : 'pointer',
-                  transition: 'all 0.3s ease',
-                  opacity: isLoading ? 0.7 : 1,
-                  marginTop: '8px',
-                }}
-              >
+              <Button type="submit" fullWidth disabled={isLoading} style={{ marginTop: '8px' }}>
                 {isLoading ? 'Creating Account...' : 'Create Account'}
-              </button>
+              </Button>
             </div>
           </form>
 
-          {/* Login Link */}
           <div style={{ textAlign: 'center', padding: '0 32px 32px 32px' }}>
             <p style={{ color: COLORS.textBody, fontFamily: FONTS.primary, fontSize: '14px', margin: 0 }}>
               Already have an account?{' '}
-              <button
-                onClick={() => onNavigate('login')}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: COLORS.text.gold,
-                  fontFamily: FONTS.primary,
-                  fontSize: '14px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                }}
-              >
+              <button onClick={() => onNavigate('login')}
+                style={{ background: 'none', border: 'none', color: COLORS.text.gold, fontFamily: FONTS.primary, fontSize: '14px', fontWeight: 'bold', cursor: 'pointer', textDecoration: 'underline' }}>
                 Log in here
               </button>
             </p>

@@ -1,11 +1,12 @@
 /**
  * BrandBar Component
  * 
- * Horizontal branding bar with "WildConnect WiFi Lag" text.
+ * Horizontal branding bar with "Waykonnek-CITU WiFi Lag" text.
  * Used on registration step pages. Maroon background with gold text.
  */
 
 import { COLORS, FONTS } from '../constants/theme';
+import logo from '../assets/waykonnek.png';
 
 export default function BrandBar() {
   return (
@@ -20,7 +21,7 @@ export default function BrandBar() {
         gap: '12px',
       }}
     >
-      <span style={{ fontSize: '28px' }}>📶</span>
+      <img src={logo} alt="Waykonnek-CITU" style={{ height: '32px', width: 'auto', borderRadius: '8px' }} />
       <span
         style={{
           fontSize: '22px',
@@ -29,7 +30,7 @@ export default function BrandBar() {
           fontFamily: FONTS.primary,
         }}
       >
-        WildConnect WiFi Lag
+        Waykonnek-CITU WiFi Lag
       </span>
     </div>
   );

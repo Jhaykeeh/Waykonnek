@@ -1,13 +1,14 @@
 /**
  * Navbar Component
  * 
- * Top navigation bar for public pages. Displays WildConnect logo
+ * Top navigation bar for public pages. Displays Waykonnek-CITU logo
  * on the left and navigation links on the right. Active link
  * highlighted in gold. Includes hover effects on all links.
  */
 
 import { useState } from 'react';
 import { COLORS, FONTS, NAV_LINKS } from '../constants/theme';
+import logo from '../assets/waykonnek.png';
 
 export default function Navbar({ currentPage, onNavigate }) {
   const [hoveredLink, setHoveredLink] = useState(null);
@@ -37,7 +38,7 @@ export default function Navbar({ currentPage, onNavigate }) {
         }}
         onClick={() => onNavigate('landing')}
       >
-        <span style={{ fontSize: '28px' }}>📶</span>
+        <img src={logo} alt="Waykonnek-CITU" style={{ height: '36px', width: 'auto', borderRadius: '8px' }} />
         <span
           style={{
             fontSize: '24px',
@@ -46,7 +47,7 @@ export default function Navbar({ currentPage, onNavigate }) {
             fontFamily: FONTS.primary,
           }}
         >
-          WildConnect
+          Waykonnek-CITU
         </span>
       </div>
 

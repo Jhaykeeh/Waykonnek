@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { COLORS, FONTS } from '../constants/theme';
+import logo from '../assets/waykonnek.png';
 
 export default function Footer({ onNavigate }) {
   const [hoveredLink, setHoveredLink] = useState(null);
@@ -40,9 +41,9 @@ export default function Footer({ onNavigate }) {
         {/* Brand Column */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-            <span style={{ fontSize: '24px' }}>📶</span>
+            <img src={logo} alt="Waykonnek-CITU" style={{ height: '32px', width: 'auto', borderRadius: '8px' }} />
             <span style={{ fontSize: '20px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary }}>
-              WildConnect
+              Waykonnek-CITU
             </span>
           </div>
           <p style={{ color: COLORS.text.mutedGold, fontFamily: FONTS.primary, fontSize: '14px', lineHeight: '1.6' }}>
@@ -88,7 +89,7 @@ export default function Footer({ onNavigate }) {
           <div style={{ color: COLORS.text.mutedGold, fontFamily: FONTS.primary, fontSize: '14px', lineHeight: '1.8' }}>
             <p style={{ margin: '0' }}>N. Bacalso Ave, Cebu City</p>
             <p style={{ margin: '0' }}>(032) 261-7741</p>
-            <p style={{ margin: '0' }}>wildconnect@cit.edu</p>
+            <p style={{ margin: '0' }}>waykonnek@cit.edu</p>
             <p style={{ margin: '0' }}>Mon–Fri 8AM–5PM</p>
           </div>
         </div>
@@ -105,7 +106,7 @@ export default function Footer({ onNavigate }) {
           fontSize: '13px',
         }}
       >
-        © 2025 WildConnect - CITU. All rights reserved.
+        © 2025 Waykonnek-CITU - CITU. All rights reserved.
       </div>
     </footer>
   );
