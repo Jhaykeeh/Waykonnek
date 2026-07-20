@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { userService } from '../services/userService';
 import { deviceService } from '../services/deviceService';
 import api from '../services/api';
@@ -14,11 +15,26 @@ import OverviewPanel from '../components/admin/OverviewPanel';
 import DeviceRequestsPanel from '../components/admin/DeviceRequestsPanel';
 import UsageReportsPanel from '../components/admin/UsageReportsPanel';
 import AdminStudentsPanel from '../components/admin/AdminStudentsPanel';
+import AccessControlPanel from '../components/admin/AccessControlPanel';
 import AdminSettingsPanel from '../components/admin/AdminSettingsPanel';
 import { MOCK_USERS, MOCK_REQUESTS } from '../data/mockData';
 
 export default function AdminDashboardPage({ onLogout }) {
-  const [activeKey, setActiveKey] = useState('overview');
+  const location = useLocation();
+  const navigate = useNavigate();
+  const pathParts = location.pathname.split('/').filter(Boolean);
+  const activeKey = pathParts[1] || 'overview';
+
+  useEffect(() => {
+    if (location.pathname === '/admin' || location.pathname === '/admin/') {
+      navigate('/admin/overview', { replace: true });
+    }
+  }, [location.pathname, navigate]);
+
+  const handleSelect = (key) => {
+    navigate(`/admin/${key}`);
+  };
+
   const [requests, setRequests] = useState(MOCK_REQUESTS);
   const [users, setUsers] = useState(MOCK_USERS);
   const [admins, setAdmins] = useState([]);
@@ -161,7 +177,7 @@ export default function AdminDashboardPage({ onLogout }) {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: COLORS.maroon.dark }}>
-      <AdminSidebar activeKey={activeKey} onSelect={setActiveKey} pendingCount={pending} onLogout={onLogout} />
+      <AdminSidebar activeKey={activeKey} onSelect={handleSelect} pendingCount={pending} onLogout={onLogout} />
 
       <div style={{ flex: 1, overflowY: 'auto', backgroundColor: COLORS.bgSection }}>
         <AdminDashboardHeader activeKey={activeKey} />
