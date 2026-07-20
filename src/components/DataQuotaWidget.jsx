@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { bandwidthService } from '../services/authService';
+import { bandwidthService } from '../services/bandwidthService';
 import { COLORS, FONTS, APP_CONFIG } from '../constants/theme';
 import { ProgressBar } from './ui';
 import Card from './Card';

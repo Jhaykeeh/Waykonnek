@@ -4,7 +4,9 @@
  */
 
 import { useState, useEffect } from 'react';
-import { deviceService, bandwidthService, userService } from '../services/authService';
+import { deviceService } from '../services/deviceService';
+import { bandwidthService } from '../services/bandwidthService';
+import { userService } from '../services/userService';
 import { COLORS, FONTS, APP_CONFIG } from '../constants/theme';
 import { Badge, ProgressBar, SectionHeading } from '../components/ui';
 import DashboardSidebar from '../components/DashboardSidebar';
