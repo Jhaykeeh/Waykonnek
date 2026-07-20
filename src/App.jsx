@@ -3,7 +3,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 import { authService } from './services/authService';
 import { userService } from './services/userService';
 import LandingPage from './pages/LandingPage';
@@ -76,9 +76,25 @@ function AdminRoute({ isLoggedIn, userRole, children }) {
 }
 
 export default function App() {
+  const navigateRouter = useNavigate();
+  const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(authService.isAuthenticated());
   const [user, setUser] = useState(getInitialUser);
   const reactNavigate = useNavigate();
+
+  const PAGE_ROUTE = {
+    landing: '/',
+    login: '/login',
+    register: '/register',
+    'forgot-password': '/forgot-password',
+    about: '/about',
+    contact: '/contact',
+    dashboard: '/dashboard',
+    'my-account': '/my-account',
+    'bandwidth-monitor': '/bandwidth-monitor',
+    'wifi-registration': '/wifi-registration',
+    'admin-panel': '/admin-panel',
+  };
 
   const handleUpdateUser = useCallback((updatedData) => {
     const fullUpdatedUser = authService.updateStoredUser(updatedData);
@@ -108,10 +124,16 @@ export default function App() {
     }
   }, [isLoggedIn, user.firstName, handleUpdateUser]);
 
-  // Unified navigate function mapping keys to React Router paths
-  const navigate = (pageKey) => {
-    const path = KEY_TO_PATH[pageKey] || '/';
-    reactNavigate(path);
+  const navigate = (page) => {
+    let destination = page;
+    if (!isLoggedIn && !PUBLIC_PAGES.includes(page)) {
+      destination = 'login';
+    } else if (page === 'admin-panel' && (!isLoggedIn || user.role !== 'admin')) {
+      destination = 'dashboard';
+    }
+
+    const path = PAGE_ROUTE[destination] || '/';
+    navigateRouter(path);
     window.scrollTo(0, 0);
   };
 
@@ -157,13 +179,20 @@ export default function App() {
     navigate('landing');
   };
 
+  // If user is on root and authenticated, redirect to dashboard
+  useEffect(() => {
+    if (location.pathname === '/' && isLoggedIn) {
+      navigateRouter('/dashboard');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn]);
+
   const userRole = user.role;
   const userDisplayName = user.firstName ? `${user.firstName} ${user.lastName}` : user.schoolId;
 
   return (
     <div style={{ minHeight: '100vh' }}>
       <Routes>
-        {/* Public Routes */}
         <Route path="/" element={<LandingPage onNavigate={navigate} />} />
         <Route path="/login" element={<LoginPage onNavigate={navigate} onLogin={handleLogin} />} />
         <Route path="/register" element={<RegisterPage onNavigate={navigate} onRegister={handleRegister} />} />
@@ -171,78 +200,83 @@ export default function App() {
         <Route path="/about" element={<AboutPage onNavigate={navigate} />} />
         <Route path="/contact" element={<ContactPage onNavigate={navigate} />} />
 
-        {/* Protected Student Routes */}
         <Route
           path="/dashboard"
-          element={
-            <ProtectedRoute isLoggedIn={isLoggedIn}>
-              <DashboardPage
-                onNavigate={navigate}
-                onLogout={handleLogout}
-                onUpdateUser={handleUpdateUser}
-                userName={userDisplayName}
-                userRole={userRole}
-                user={user}
-              />
-            </ProtectedRoute>
-          }
+          element={isLoggedIn ? (
+            <DashboardPage
+              onNavigate={navigate}
+              onLogout={handleLogout}
+              onUpdateUser={handleUpdateUser}
+              userName={userDisplayName}
+              userRole={userRole}
+              user={user}
+            />
+          ) : (
+            <Navigate to="/login" replace />
+          )}
         />
+
         <Route
           path="/my-account"
-          element={
-            <ProtectedRoute isLoggedIn={isLoggedIn}>
-              <MyAccountPage
-                onNavigate={navigate}
-                onLogout={handleLogout}
-                onUpdateUser={handleUpdateUser}
-                userName={userDisplayName}
-                userRole={userRole}
-                user={user}
-              />
-            </ProtectedRoute>
-          }
+          element={isLoggedIn ? (
+            <MyAccountPage
+              onNavigate={navigate}
+              onLogout={handleLogout}
+              onUpdateUser={handleUpdateUser}
+              userName={userDisplayName}
+              userRole={userRole}
+              user={user}
+            />
+          ) : (
+            <Navigate to="/login" replace />
+          )}
         />
+
         <Route
           path="/bandwidth-monitor"
-          element={
-            <ProtectedRoute isLoggedIn={isLoggedIn}>
-              <BandwidthMonitorPage
-                onNavigate={navigate}
-                onLogout={handleLogout}
-                userName={userDisplayName}
-                userRole={userRole}
-              />
-            </ProtectedRoute>
-          }
+          element={isLoggedIn ? (
+            <BandwidthMonitorPage
+              onNavigate={navigate}
+              onLogout={handleLogout}
+              userName={userDisplayName}
+              userRole={userRole}
+            />
+          ) : (
+            <Navigate to="/login" replace />
+          )}
         />
+
         <Route
           path="/wifi-registration"
-          element={
-            <ProtectedRoute isLoggedIn={isLoggedIn}>
-              <WifiRegistrationPage
-                onNavigate={navigate}
-                onLogout={handleLogout}
-                userName={userDisplayName}
-                userRole={userRole}
-              />
-            </ProtectedRoute>
-          }
+          element={isLoggedIn ? (
+            <WifiRegistrationPage
+              onNavigate={navigate}
+              onLogout={handleLogout}
+              userName={userDisplayName}
+              userRole={userRole}
+            />
+          ) : (
+            <Navigate to="/login" replace />
+          )}
         />
 
-        {/* Protected Admin Routes */}
         <Route
           path="/admin/*"
-          element={
-            <AdminRoute isLoggedIn={isLoggedIn} userRole={userRole}>
-              <AdminDashboardPage
-                onNavigate={navigate}
-                onLogout={handleLogout}
-              />
-            </AdminRoute>
-          }
+          element={isLoggedIn && user.role === 'admin' ? (
+            <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} />
+          ) : (
+            <Navigate to="/dashboard" replace />
+          )}
         />
 
-        {/* Catch-all Fallback */}
+        {/* top-level friendly admin routes */}
+        <Route path="/network-overview" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/all-users" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/device-requests" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/usage-reports" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/access-control" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/admin-panel" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

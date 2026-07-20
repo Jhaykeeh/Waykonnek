@@ -92,8 +92,9 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
   };
 
   const handleMenuNavigate = (key) => {
-    if (key === 'my-account') { setActiveMenu(key); return; }
-    onNavigate('dashboard');
+    setActiveMenu(key);
+    if (key === 'my-account') return;
+    onNavigate(key);
   };
 
   const handleProfileSave = async () => {

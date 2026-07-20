@@ -44,10 +44,12 @@ export default function Sidebar({
       }}
     >
       {/* ── User Info ── */}
-      <div style={{ padding: '24px 20px', borderBottom: `1px solid ${COLORS.gold.border}` }}>
-        <p style={{ color: COLORS.text.mutedGold, fontFamily: FONTS.primary, fontSize: '12px', margin: '0 0 4px' }}>
-          {userLabel}
-        </p>
+      <div style={{ padding: '24px 20px', borderBottom: `1px solid ${COLORS.gold.border}`, textAlign: 'center' }}>
+        {userLabel ? (
+          <p style={{ color: COLORS.text.mutedGold, fontFamily: FONTS.primary, fontSize: '12px', margin: '0 0 4px' }}>
+            {userLabel}
+          </p>
+        ) : null}
         <p style={{ color: COLORS.text.gold, fontFamily: FONTS.primary, fontSize: '16px', fontWeight: 'bold', margin: 0 }}>
           {userName}
         </p>
