@@ -18,7 +18,19 @@ import BandwidthMonitorPage from './pages/BandwidthMonitorPage';
 import WifiRegistrationPage from './pages/WifiRegistrationPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 
-const PUBLIC_PAGES = ['landing', 'login', 'register', 'forgot-password', 'about', 'contact'];
+const KEY_TO_PATH = {
+  landing: '/',
+  login: '/login',
+  register: '/register',
+  'forgot-password': '/forgot-password',
+  about: '/about',
+  contact: '/contact',
+  dashboard: '/dashboard',
+  'my-account': '/my-account',
+  'bandwidth-monitor': '/bandwidth-monitor',
+  'wifi-registration': '/wifi-registration',
+  'admin-panel': '/admin',
+};
 
 function getInitialUser() {
   if (!authService.isAuthenticated()) {
@@ -45,11 +57,30 @@ function getInitialUser() {
   }
 }
 
+// Route Protection Components
+function ProtectedRoute({ isLoggedIn, children }) {
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
+function AdminRoute({ isLoggedIn, userRole, children }) {
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+  if (userRole !== 'admin') {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+}
+
 export default function App() {
   const navigateRouter = useNavigate();
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(authService.isAuthenticated());
   const [user, setUser] = useState(getInitialUser);
+  const reactNavigate = useNavigate();
 
   const PAGE_ROUTE = {
     landing: '/',
