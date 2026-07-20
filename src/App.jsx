@@ -3,6 +3,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 import { authService } from './services/authService';
 import { userService } from './services/userService';
 import LandingPage from './pages/LandingPage';
@@ -45,12 +46,24 @@ function getInitialUser() {
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState(() => {
-    if (authService.isAuthenticated()) return 'dashboard';
-    return 'landing';
-  });
+  const navigateRouter = useNavigate();
+  const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(authService.isAuthenticated());
   const [user, setUser] = useState(getInitialUser);
+
+  const PAGE_ROUTE = {
+    landing: '/',
+    login: '/login',
+    register: '/register',
+    'forgot-password': '/forgot-password',
+    about: '/about',
+    contact: '/contact',
+    dashboard: '/dashboard',
+    'my-account': '/my-account',
+    'bandwidth-monitor': '/bandwidth-monitor',
+    'wifi-registration': '/wifi-registration',
+    'admin-panel': '/admin-panel',
+  };
 
   const handleUpdateUser = useCallback((updatedData) => {
     const fullUpdatedUser = authService.updateStoredUser(updatedData);
@@ -88,7 +101,8 @@ export default function App() {
       destination = 'dashboard';
     }
 
-    setCurrentPage(destination);
+    const path = PAGE_ROUTE[destination] || '/';
+    navigateRouter(path);
     window.scrollTo(0, 0);
   };
 
@@ -134,90 +148,106 @@ export default function App() {
     navigate('landing');
   };
 
-  const renderPage = () => {
-const userRole = user.role;
-    const userDisplayName = user.firstName ? `${user.firstName} ${user.lastName}` : user.schoolId;
-
-    switch (currentPage) {
-      case 'landing':
-        return <LandingPage onNavigate={navigate} />;
-
-      case 'login':
-        return <LoginPage onNavigate={navigate} onLogin={handleLogin} />;
-
-      case 'register':
-        return <RegisterPage onNavigate={navigate} onRegister={handleRegister} />;
-
-      case 'forgot-password':
-        return <ForgotPasswordPage onNavigate={navigate} />;
-
-      case 'about':
-        return <AboutPage onNavigate={navigate} />;
-
-      case 'contact':
-        return <ContactPage onNavigate={navigate} />;
-
-      case 'dashboard':
-        if (!isLoggedIn) return null;
-        return (
-          <DashboardPage
-            onNavigate={navigate}
-            onLogout={handleLogout}
-            onUpdateUser={handleUpdateUser}
-            userName={userDisplayName}
-            userRole={userRole}
-            user={user}
-          />
-        );
-
-      case 'my-account':
-        if (!isLoggedIn) return null;
-        return (
-          <MyAccountPage
-            onNavigate={navigate}
-            onLogout={handleLogout}
-            onUpdateUser={handleUpdateUser}
-            userName={userDisplayName}
-            userRole={userRole}
-            user={user}
-          />
-        );
-
-      case 'bandwidth-monitor':
-        if (!isLoggedIn) return null;
-        return (
-          <BandwidthMonitorPage
-            onNavigate={navigate}
-            onLogout={handleLogout}
-            userName={userDisplayName}
-            userRole={userRole}
-          />
-        );
-
-      case 'wifi-registration':
-        if (!isLoggedIn) return null;
-        return (
-          <WifiRegistrationPage
-            onNavigate={navigate}
-            onLogout={handleLogout}
-            userName={userDisplayName}
-            userRole={userRole}
-          />
-        );
-
-      case 'admin-panel':
-        if (!isLoggedIn || user.role !== 'admin') return null;
-        return (
-          <AdminDashboardPage
-            onNavigate={navigate}
-            onLogout={handleLogout}
-          />
-        );
-
-      default:
-        return <LandingPage onNavigate={navigate} />;
+  // If user is on root and authenticated, redirect to dashboard
+  useEffect(() => {
+    if (location.pathname === '/' && isLoggedIn) {
+      navigateRouter('/dashboard');
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn]);
 
-  return <div style={{ minHeight: '100vh' }}>{renderPage()}</div>;
+  const userRole = user.role;
+  const userDisplayName = user.firstName ? `${user.firstName} ${user.lastName}` : user.schoolId;
+
+  return (
+    <div style={{ minHeight: '100vh' }}>
+      <Routes>
+        <Route path="/" element={<LandingPage onNavigate={navigate} />} />
+        <Route path="/login" element={<LoginPage onNavigate={navigate} onLogin={handleLogin} />} />
+        <Route path="/register" element={<RegisterPage onNavigate={navigate} onRegister={handleRegister} />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage onNavigate={navigate} />} />
+        <Route path="/about" element={<AboutPage onNavigate={navigate} />} />
+        <Route path="/contact" element={<ContactPage onNavigate={navigate} />} />
+
+        <Route
+          path="/dashboard"
+          element={isLoggedIn ? (
+            <DashboardPage
+              onNavigate={navigate}
+              onLogout={handleLogout}
+              onUpdateUser={handleUpdateUser}
+              userName={userDisplayName}
+              userRole={userRole}
+              user={user}
+            />
+          ) : (
+            <Navigate to="/login" replace />
+          )}
+        />
+
+        <Route
+          path="/my-account"
+          element={isLoggedIn ? (
+            <MyAccountPage
+              onNavigate={navigate}
+              onLogout={handleLogout}
+              onUpdateUser={handleUpdateUser}
+              userName={userDisplayName}
+              userRole={userRole}
+              user={user}
+            />
+          ) : (
+            <Navigate to="/login" replace />
+          )}
+        />
+
+        <Route
+          path="/bandwidth-monitor"
+          element={isLoggedIn ? (
+            <BandwidthMonitorPage
+              onNavigate={navigate}
+              onLogout={handleLogout}
+              userName={userDisplayName}
+              userRole={userRole}
+            />
+          ) : (
+            <Navigate to="/login" replace />
+          )}
+        />
+
+        <Route
+          path="/wifi-registration"
+          element={isLoggedIn ? (
+            <WifiRegistrationPage
+              onNavigate={navigate}
+              onLogout={handleLogout}
+              userName={userDisplayName}
+              userRole={userRole}
+            />
+          ) : (
+            <Navigate to="/login" replace />
+          )}
+        />
+
+        <Route
+          path="/admin/*"
+          element={isLoggedIn && user.role === 'admin' ? (
+            <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} />
+          ) : (
+            <Navigate to="/dashboard" replace />
+          )}
+        />
+
+        {/* top-level friendly admin routes */}
+        <Route path="/network-overview" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/all-users" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/device-requests" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/usage-reports" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/access-control" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+        <Route path="/admin-panel" element={isLoggedIn && user.role === 'admin' ? <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} /> : <Navigate to="/dashboard" replace />} />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
+  );
 }
