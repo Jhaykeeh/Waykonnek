@@ -9,7 +9,6 @@ import { COLORS, FONTS } from '../constants/theme';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Button, Input } from '../components/ui';
-import logo from '../assets/waykonnek.png';
 
 export default function LoginPage({ onNavigate, onLogin }) {
   const [schoolId, setSchoolId] = useState('');

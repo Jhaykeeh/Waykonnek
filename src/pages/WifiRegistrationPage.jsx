@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { deviceService } from '../services/authService';
+import { deviceService } from '../services/deviceService';
 import { COLORS, FONTS, APP_CONFIG, getNextDeviceNumber } from '../constants/theme';
 import { Button, Input, StepBar, Toast } from '../components/ui';
 import DashboardSidebar from '../components/DashboardSidebar';

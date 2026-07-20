@@ -4,7 +4,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { authService, userService } from '../services/authService';
+import { authService } from '../services/authService';
+import { userService } from '../services/userService';
 import { COLORS, FONTS } from '../constants/theme';
 import DashboardSidebar from '../components/DashboardSidebar';
 import Card from '../components/Card';

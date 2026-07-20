@@ -4,6 +4,7 @@
 import { COLORS, FONTS } from '../../constants/theme';
 import { Badge, Button, FilterTabs } from '../ui';
 import Card from '../Card';
+import AdminSection from './AdminSection';
 import { useState } from 'react';
 
 export default function DeviceRequestsPanel({ requests, onApprove, onReject }) {
@@ -11,19 +12,11 @@ export default function DeviceRequestsPanel({ requests, onApprove, onReject }) {
   const filtered = filter === 'ALL' ? requests : requests.filter((r) => r.status === filter);
 
   return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <div>
-          <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, margin: 0 }}>
-            Device Registration Requests
-          </h3>
-          <p style={{ fontSize: '12px', color: COLORS.textMuted, fontFamily: FONTS.primary, margin: '4px 0 0' }}>
-            1st use of a voucher is auto-approved · 2nd use needs your review
-          </p>
-        </div>
-        <FilterTabs options={['ALL', 'PENDING', 'APPROVED', 'REJECTED']} active={filter} onChange={setFilter} />
-      </div>
-
+    <AdminSection
+      title="Device Registration Requests"
+      subtitle="1st use of a voucher is auto-approved · 2nd use needs your review"
+      action={<FilterTabs options={['ALL', 'PENDING', 'APPROVED', 'REJECTED']} active={filter} onChange={setFilter} />}
+    >
       <Card style={{ padding: 0 }}>
         {filtered.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center', color: COLORS.textMuted, fontFamily: FONTS.primary }}>No requests found.</div>
@@ -68,6 +61,6 @@ export default function DeviceRequestsPanel({ requests, onApprove, onReject }) {
           ))
         )}
       </Card>
-    </>
+    </AdminSection>
   );
 }

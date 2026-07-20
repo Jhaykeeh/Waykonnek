@@ -4,15 +4,16 @@
  */
 
 import { useState, useEffect } from 'react';
-import { userService, deviceService } from '../services/authService';
+import { userService } from '../services/userService';
+import { deviceService } from '../services/deviceService';
 import api from '../services/api';
 import { COLORS, FONTS, ADMIN_SIDEBAR_ITEMS } from '../constants/theme';
 import AdminSidebar from '../components/AdminSidebar';
-import Card from '../components/Card';
+import AdminDashboardHeader from '../components/admin/AdminDashboardHeader';
 import OverviewPanel from '../components/admin/OverviewPanel';
 import DeviceRequestsPanel from '../components/admin/DeviceRequestsPanel';
 import UsageReportsPanel from '../components/admin/UsageReportsPanel';
-import AccessControlPanel from '../components/admin/AccessControlPanel';
+import AdminStudentsPanel from '../components/admin/AdminStudentsPanel';
 import AdminSettingsPanel from '../components/admin/AdminSettingsPanel';
 import { MOCK_USERS, MOCK_REQUESTS } from '../data/mockData';
 
@@ -138,39 +139,12 @@ export default function AdminDashboardPage({ onLogout }) {
         return <OverviewPanel users={users} pending={pending} approved={approved} />;
       case 'users':
         return (
-          <>
-            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '16px' }}>
-              Registered Students ({users.length})
-            </h3>
-            <Card style={{ padding: 0 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 80px 80px 100px 100px 80px', padding: '12px 24px', borderBottom: `1px solid ${COLORS.gold.border}`, fontSize: '11px', fontWeight: 'bold', color: COLORS.textMuted, fontFamily: FONTS.primary, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                <span>Student</span><span>School ID</span><span>Devices</span><span>Usage</span><span>Status</span><span>Action</span><span>Delete</span>
-              </div>
-              {users.map((user, idx) => (
-                <div key={user.schoolId} style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 80px 80px 100px 100px 80px', padding: '14px 24px', borderBottom: idx < users.length - 1 ? `1px solid ${COLORS.gold.border}` : 'none', alignItems: 'center' }}>
-                  <span style={{ fontSize: '14px', fontWeight: 'bold', color: COLORS.textBody, fontFamily: FONTS.primary }}>{user.name}</span>
-                  <span style={{ fontSize: '13px', color: COLORS.textMuted, fontFamily: FONTS.mono }}>{user.schoolId}</span>
-                  <span style={{ fontSize: '13px', color: COLORS.textBody, fontFamily: FONTS.mono, textAlign: 'center' }}>{user.devices}/2</span>
-                  <span style={{ fontSize: '13px', color: COLORS.textBody, fontFamily: FONTS.mono }}>{user.usage}</span>
-                  <span style={{
-                    padding: '3px 10px', borderRadius: '12px', fontSize: '11px', fontWeight: 'bold', fontFamily: FONTS.mono,
-                    backgroundColor: user.status === 'Active' ? 'rgba(76,175,80,0.15)' : user.status === 'Capped' ? 'rgba(244,67,54,0.15)' : 'rgba(255,193,7,0.15)',
-                    color: user.status === 'Active' ? '#4CAF50' : user.status === 'Capped' ? '#F44336' : '#FFC107',
-                  }}>{user.status}</span>
-                  <button onClick={() => handleSuspend(user.id)} style={{
-                    padding: '5px 12px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: FONTS.primary, fontWeight: 'bold',
-                    backgroundColor: user.suspended ? 'rgba(76,175,80,0.15)' : 'rgba(244,67,54,0.15)',
-                    color: user.suspended ? '#4CAF50' : '#F44336',
-                    border: user.suspended ? '1px solid rgba(76,175,80,0.4)' : '1px solid rgba(244,67,54,0.4)',
-                  }}>{user.suspended ? '✓ Restore' : '⊘ Suspend'}</button>
-                  <button onClick={() => handleDeleteUser(user.id)} style={{
-                    padding: '5px 12px', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: FONTS.primary, fontWeight: 'bold',
-                    backgroundColor: 'rgba(244,67,54,0.15)', color: '#F44336', border: '1px solid rgba(244,67,54,0.4)',
-                  }}>🗑 Delete</button>
-                </div>
-              ))}
-            </Card>
-          </>
+          <AdminStudentsPanel
+            users={users}
+            onAddStudent={handleAddStudent}
+            onSuspendUser={handleSuspend}
+            onDeleteUser={handleDeleteUser}
+          />
         );
       case 'devices':
         return <DeviceRequestsPanel requests={requests} onApprove={handleApprove} onReject={handleReject} />;
@@ -190,19 +164,7 @@ export default function AdminDashboardPage({ onLogout }) {
       <AdminSidebar activeKey={activeKey} onSelect={setActiveKey} pendingCount={pending} onLogout={onLogout} />
 
       <div style={{ flex: 1, overflowY: 'auto', backgroundColor: COLORS.bgSection }}>
-        <header style={{
-          backgroundColor: COLORS.maroon.dark, borderBottom: `2px solid ${COLORS.gold.border}`,
-          padding: '18px 40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          position: 'sticky', top: 0, zIndex: 100,
-        }}>
-          <span style={{ fontSize: '20px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary }}>
-            {ADMIN_SIDEBAR_ITEMS.find((i) => i.key === activeKey)?.icon}{' '}
-            {ADMIN_SIDEBAR_ITEMS.find((i) => i.key === activeKey)?.label}
-          </span>
-          <span style={{ fontSize: '13px', color: COLORS.text.mutedGold, fontFamily: FONTS.primary }}>
-            CITU-Bandwidth Monitoring System · Admin
-          </span>
-        </header>
+        <AdminDashboardHeader activeKey={activeKey} />
 
         <main style={{ padding: '32px 40px' }}>
           {renderPanel()}

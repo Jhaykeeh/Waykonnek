@@ -6,6 +6,7 @@ import { COLORS, FONTS } from '../../constants/theme';
 import { SectionHeading } from '../ui';
 import { MOCK_WEEKLY_REPORT, MOCK_MONTHLY_REPORT } from '../../data/mockData';
 import Card from '../Card';
+import AdminSection from './AdminSection';
 
 export default function UsageReportsPanel({ users }) {
   const [reportRange, setReportRange] = useState('week');
@@ -16,9 +17,9 @@ export default function UsageReportsPanel({ users }) {
   const maxBar = Math.max(...bars);
 
   return (
-    <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <SectionHeading style={{ margin: 0 }}>Bandwidth Usage Reports</SectionHeading>
+    <AdminSection
+      title="Bandwidth Usage Reports"
+      action={(
         <div style={{ display: 'flex', gap: '8px' }}>
           {['week', 'month'].map((r) => (
             <button key={r} onClick={() => setReportRange(r)}
@@ -34,7 +35,8 @@ export default function UsageReportsPanel({ users }) {
             </button>
           ))}
         </div>
-      </div>
+      )}
+    >
 
       {/* Summary Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '28px' }}>
@@ -101,6 +103,6 @@ export default function UsageReportsPanel({ users }) {
           </div>
         ))}
       </Card>
-    </>
+    </AdminSection>
   );
 }

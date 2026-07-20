@@ -2,8 +2,9 @@
  * App.jsx - Main Application Router
  */
 
-import { useState, useEffect } from 'react';
-import { authService, userService } from './services/authService';
+import { useState, useEffect, useCallback } from 'react';
+import { authService } from './services/authService';
+import { userService } from './services/userService';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -51,19 +52,19 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(authService.isAuthenticated());
   const [user, setUser] = useState(getInitialUser);
 
-  // Redirect unauthorized users away from protected pages
-  useEffect(() => {
-    if (!isLoggedIn && !PUBLIC_PAGES.includes(currentPage)) {
-      setCurrentPage('login');
-    }
-  }, [isLoggedIn, currentPage]);
-
-  // Redirect non-admin users away from admin pages
-  useEffect(() => {
-    if (isLoggedIn && currentPage === 'admin-panel' && user.role !== 'admin') {
-      setCurrentPage('dashboard');
-    }
-  }, [isLoggedIn, currentPage, user.role]);
+  const handleUpdateUser = useCallback((updatedData) => {
+    const fullUpdatedUser = authService.updateStoredUser(updatedData);
+    setUser({
+      schoolId: fullUpdatedUser.schoolId || '',
+      role: fullUpdatedUser.role === 'ADMIN' ? 'admin' : 'student',
+      firstName: fullUpdatedUser.firstName || '',
+      lastName: fullUpdatedUser.lastName || '',
+      email: fullUpdatedUser.email || '',
+      course: fullUpdatedUser.course || '',
+      year: fullUpdatedUser.year || '',
+      contactNumber: fullUpdatedUser.contactNumber || '',
+    });
+  }, []);
 
   // Auto-hydrate profile if logged in but data is missing
   useEffect(() => {
@@ -77,11 +78,17 @@ export default function App() {
         })
         .catch(() => {});
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, user.firstName, handleUpdateUser]);
 
-  // Navigation
   const navigate = (page) => {
-    setCurrentPage(page);
+    let destination = page;
+    if (!isLoggedIn && !PUBLIC_PAGES.includes(page)) {
+      destination = 'login';
+    } else if (page === 'admin-panel' && (!isLoggedIn || user.role !== 'admin')) {
+      destination = 'dashboard';
+    }
+
+    setCurrentPage(destination);
     window.scrollTo(0, 0);
   };
 
@@ -119,21 +126,6 @@ export default function App() {
     navigate('dashboard');
   };
 
-  // Update user profile handler
-  const handleUpdateUser = (updatedData) => {
-    const fullUpdatedUser = authService.updateStoredUser(updatedData);
-    setUser({
-      schoolId: fullUpdatedUser.schoolId || '',
-      role: fullUpdatedUser.role === 'ADMIN' ? 'admin' : 'student',
-      firstName: fullUpdatedUser.firstName || '',
-      lastName: fullUpdatedUser.lastName || '',
-      email: fullUpdatedUser.email || '',
-      course: fullUpdatedUser.course || '',
-      year: fullUpdatedUser.year || '',
-      contactNumber: fullUpdatedUser.contactNumber || '',
-    });
-  };
-
   // Logout
   const handleLogout = () => {
     authService.logout();
@@ -143,8 +135,7 @@ export default function App() {
   };
 
   const renderPage = () => {
-    const userName = user.schoolId;
-    const userRole = user.role;
+const userRole = user.role;
     const userDisplayName = user.firstName ? `${user.firstName} ${user.lastName}` : user.schoolId;
 
     switch (currentPage) {
