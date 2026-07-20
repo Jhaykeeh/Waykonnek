@@ -32,6 +32,8 @@ const KEY_TO_PATH = {
   'admin-panel': '/admin',
 };
 
+const PUBLIC_PAGES = ['landing', 'login', 'register', 'forgot-password', 'about', 'contact'];
+
 function getInitialUser() {
   if (!authService.isAuthenticated()) {
     return { schoolId: '', role: '', firstName: '', lastName: '', email: '', course: '', year: '', contactNumber: '' };
@@ -80,7 +82,6 @@ export default function App() {
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(authService.isAuthenticated());
   const [user, setUser] = useState(getInitialUser);
-  const reactNavigate = useNavigate();
 
   const PAGE_ROUTE = {
     landing: '/',
