@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { userService } from '../services/userService';
 import { deviceService } from '../services/deviceService';
 import api from '../services/api';
@@ -14,13 +15,37 @@ import OverviewPanel from '../components/admin/OverviewPanel';
 import DeviceRequestsPanel from '../components/admin/DeviceRequestsPanel';
 import UsageReportsPanel from '../components/admin/UsageReportsPanel';
 import AdminStudentsPanel from '../components/admin/AdminStudentsPanel';
+import AccessControlPanel from '../components/admin/AccessControlPanel';
 import AdminSettingsPanel from '../components/admin/AdminSettingsPanel';
-import { MOCK_USERS, MOCK_REQUESTS } from '../data/mockData';
 
 export default function AdminDashboardPage({ onLogout }) {
+  const navigateRouter = useNavigate();
+  const location = useLocation();
+
   const [activeKey, setActiveKey] = useState('overview');
-  const [requests, setRequests] = useState(MOCK_REQUESTS);
-  const [users, setUsers] = useState(MOCK_USERS);
+
+  const PATH_TO_KEY = (path) => {
+    if (!path) return 'overview';
+    const p = path.toLowerCase();
+    if (p.includes('network-overview') || p === '/admin' || p.endsWith('/admin') || p.includes('/admin/overview')) return 'overview';
+    if (p.includes('/all-users') || p.includes('/admin/users')) return 'users';
+    if (p.includes('/device-requests') || p.includes('/admin/devices')) return 'devices';
+    if (p.includes('/usage-reports') || p.includes('/admin/reports')) return 'reports';
+    if (p.includes('/access-control') || p.includes('/admin/access')) return 'access';
+    if (p.includes('/admin-panel') || p.includes('/admin/admin')) return 'admin';
+    return 'overview';
+  };
+
+  const KEY_TO_PATH = {
+    overview: '/network-overview',
+    users: '/all-users',
+    devices: '/device-requests',
+    reports: '/usage-reports',
+    access: '/access-control',
+    admin: '/admin-panel',
+  };
+  const [requests, setRequests] = useState([]);
+  const [users, setUsers] = useState([]);
   const [admins, setAdmins] = useState([]);
   const [logs, setLogs] = useState([]);
 
@@ -70,6 +95,12 @@ export default function AdminDashboardPage({ onLogout }) {
     };
     fetchData();
   }, []);
+
+  // Sync activeKey with URL
+  useEffect(() => {
+    const k = PATH_TO_KEY(location.pathname);
+    setActiveKey(k);
+  }, [location.pathname]);
 
   const addLog = (action, target) => {
     setLogs((prev) => [{ time: 'Just now', admin: 'IT Administrator', action, target }, ...prev]);
@@ -161,7 +192,7 @@ export default function AdminDashboardPage({ onLogout }) {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: COLORS.maroon.dark }}>
-      <AdminSidebar activeKey={activeKey} onSelect={setActiveKey} pendingCount={pending} onLogout={onLogout} />
+      <AdminSidebar activeKey={activeKey} onSelect={(key) => { const path = KEY_TO_PATH[key] || '/network-overview'; navigateRouter(path); }} pendingCount={pending} onLogout={onLogout} />
 
       <div style={{ flex: 1, overflowY: 'auto', backgroundColor: COLORS.bgSection }}>
         <AdminDashboardHeader activeKey={activeKey} />

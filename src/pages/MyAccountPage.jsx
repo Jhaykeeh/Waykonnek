@@ -1,6 +1,8 @@
 /**
  * MyAccount Component
  * Account management page with profile info, password change, and notification preferences.
+ * Profile fields: firstName, lastName, email, studentId (read-only).
+ * Course, yearLevel, contactNumber are managed elsewhere or via direct DB update.
  */
 
 import { useState, useEffect } from 'react';
@@ -26,9 +28,6 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
     lastName: user?.lastName || '',
     email: user?.email || '',
     studentId: user?.schoolId || '',
-    course: user?.course || '',
-    year: user?.year || '',
-    contactNumber: user?.contactNumber || '',
   });
 
   const [profileDraft, setProfileDraft] = useState({ ...profile });
@@ -41,9 +40,6 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
         lastName: u.lastName || '',
         email: u.email || '',
         studentId: u.schoolId || u.studentId || userName || '',
-        course: u.course || '',
-        year: u.year || '',
-        contactNumber: u.contactNumber || '',
       };
       setProfile(p);
       setProfileDraft(p);
@@ -58,9 +54,6 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
           if (data.lastName) apiData.lastName = data.lastName;
           if (data.email) apiData.email = data.email;
           if (data.schoolId || data.studentId) apiData.schoolId = data.schoolId || data.studentId;
-          if (data.course) apiData.course = data.course;
-          if (data.year) apiData.year = data.year;
-          if (data.contactNumber) apiData.contactNumber = data.contactNumber;
 
           setProfile((prev) => {
             const newProfile = { ...prev, ...apiData, studentId: apiData.schoolId || prev.studentId };
@@ -92,17 +85,18 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
   };
 
   const handleMenuNavigate = (key) => {
-    if (key === 'my-account') { setActiveMenu(key); return; }
-    onNavigate('dashboard');
+    setActiveMenu(key);
+    if (key === 'my-account') return;
+    onNavigate(key);
   };
 
   const handleProfileSave = async () => {
     setSavingProfile(true);
     try {
       await userService.updateProfile({
-        firstName: profileDraft.firstName, lastName: profileDraft.lastName,
-        email: profileDraft.email, course: profileDraft.course,
-        year: profileDraft.year, contactNumber: profileDraft.contactNumber,
+        firstName: profileDraft.firstName,
+        lastName: profileDraft.lastName,
+        email: profileDraft.email,
       });
       setProfile({ ...profileDraft });
       setEditingProfile(false);
@@ -132,9 +126,6 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
     { field: 'lastName', label: 'Last Name' },
     { field: 'email', label: 'Email Address' },
     { field: 'studentId', label: 'Student ID', readOnly: true },
-    { field: 'course', label: 'Course' },
-    { field: 'year', label: 'Year Level' },
-    { field: 'contactNumber', label: 'Contact Number' },
   ];
 
   return (
@@ -177,9 +168,6 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
                 <h2 style={{ fontSize: '28px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary, marginBottom: '4px' }}>
                   {profile.firstName} {profile.lastName}
                 </h2>
-                <p style={{ fontSize: '14px', color: COLORS.text.white, fontFamily: FONTS.primary, margin: '0 0 2px 0' }}>
-                  {(profile.course || 'Course not set')} · {(profile.year || 'Year not set')}
-                </p>
                 <p style={{ fontSize: '13px', color: COLORS.text.mutedGold, fontFamily: FONTS.primary, margin: 0 }}>
                   Student ID: {profile.studentId}
                 </p>
@@ -200,7 +188,7 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
               borderRadius: '10px', color: '#4CAF50', fontFamily: FONTS.primary, fontSize: '14px',
               display: 'flex', alignItems: 'center', gap: '10px',
             }}>
-              ✅ {successMsg}
+              {successMsg}
             </div>
           )}
 
@@ -215,7 +203,7 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <Button variant="secondary" onClick={() => { setProfileDraft({ ...profile }); setEditingProfile(false); }}>Cancel</Button>
                   <Button onClick={handleProfileSave} disabled={savingProfile}>
-                    {savingProfile ? 'Saving…' : 'Save Changes'}
+                    {savingProfile ? 'Saving...' : 'Save Changes'}
                   </Button>
                 </div>
               )}
@@ -250,7 +238,7 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <Button variant="secondary" onClick={() => { setEditingPassword(false); setPasswords({ current: '', newPass: '', confirm: '' }); }}>Cancel</Button>
                   <Button onClick={handlePasswordSave} disabled={savingPassword}>
-                    {savingPassword ? 'Saving…' : 'Update Password'}
+                    {savingPassword ? 'Saving...' : 'Update Password'}
                   </Button>
                 </div>
               )}

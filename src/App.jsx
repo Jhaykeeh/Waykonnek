@@ -1,10 +1,6 @@
-/**
- * App.jsx - Main Application Router
- */
-
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation, Routes, Route, Navigate } from 'react-router-dom';
 import { authService } from './services/authService';
-import { userService } from './services/userService';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -17,207 +13,192 @@ import BandwidthMonitorPage from './pages/BandwidthMonitorPage';
 import WifiRegistrationPage from './pages/WifiRegistrationPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 
-const PUBLIC_PAGES = ['landing', 'login', 'register', 'forgot-password', 'about', 'contact'];
+const EMPTY_USER = { id: null, schoolId: '', role: '', firstName: '', lastName: '', email: '', course: '', year: '', contactNumber: '' };
 
-function getInitialUser() {
-  if (!authService.isAuthenticated()) {
-    return { schoolId: '', role: '', firstName: '', lastName: '', email: '', course: '', year: '', contactNumber: '' };
-  }
+function ProtectedRoute({ isLoggedIn, children }) {
+  if (!isLoggedIn) return <Navigate to="/login" replace />;
+  return children;
+}
 
-  try {
-    const user = authService.getCurrentUser();
-    if (!user) {
-      return { schoolId: '', role: '', firstName: '', lastName: '', email: '', course: '', year: '', contactNumber: '' };
-    }
-    return {
-      schoolId: user.schoolId || '',
-      role: user.role === 'ADMIN' ? 'admin' : 'student',
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      email: user.email || '',
-      course: user.course || '',
-      year: user.year || '',
-      contactNumber: user.contactNumber || '',
-    };
-  } catch {
-    return { schoolId: '', role: '', firstName: '', lastName: '', email: '', course: '', year: '', contactNumber: '' };
-  }
+function AdminRoute({ isLoggedIn, userRole, children }) {
+  if (!isLoggedIn) return <Navigate to="/login" replace />;
+  if (userRole !== 'admin') return <Navigate to="/dashboard" replace />;
+  return children;
+}
+
+function buildUser(data) {
+  if (!data) return { ...EMPTY_USER };
+  return {
+    id: data.id ?? null,
+    schoolId: data.schoolId || '',
+    firstName: data.firstName || '',
+    lastName: data.lastName || '',
+    email: data.email || '',
+    course: data.course || '',
+    year: data.yearLevel || data.year || '',
+    contactNumber: data.contactNumber || '',
+    role: data.role === 'ADMIN' ? 'admin' : (data.role || ''),
+  };
 }
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState(() => {
-    if (authService.isAuthenticated()) return 'dashboard';
-    return 'landing';
-  });
-  const [isLoggedIn, setIsLoggedIn] = useState(authService.isAuthenticated());
-  const [user, setUser] = useState(getInitialUser);
+  const navigateRouter = useNavigate();
+  const location = useLocation();
 
-  const handleUpdateUser = useCallback((updatedData) => {
-    const fullUpdatedUser = authService.updateStoredUser(updatedData);
-    setUser({
-      schoolId: fullUpdatedUser.schoolId || '',
-      role: fullUpdatedUser.role === 'ADMIN' ? 'admin' : 'student',
-      firstName: fullUpdatedUser.firstName || '',
-      lastName: fullUpdatedUser.lastName || '',
-      email: fullUpdatedUser.email || '',
-      course: fullUpdatedUser.course || '',
-      year: fullUpdatedUser.year || '',
-      contactNumber: fullUpdatedUser.contactNumber || '',
-    });
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState({ ...EMPTY_USER });
+
+  useEffect(() => {
+    const init = async () => {
+      if (!authService.isAuthenticated()) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const profile = await authService.validateToken();
+        setUser(buildUser(profile));
+        setIsLoggedIn(true);
+      } catch {
+        authService.logout();
+        setIsLoggedIn(false);
+        setUser({ ...EMPTY_USER });
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
   }, []);
 
-  // Auto-hydrate profile if logged in but data is missing
-  useEffect(() => {
-    if (isLoggedIn && !user.firstName) {
-      userService.getProfile()
-        .then(response => {
-          const userData = response.user || response;
-          if (userData && (userData.firstName || userData.lastName)) {
-            handleUpdateUser(userData);
-          }
-        })
-        .catch(() => {});
-    }
-  }, [isLoggedIn, user.firstName, handleUpdateUser]);
-
-  const navigate = (page) => {
-    let destination = page;
-    if (!isLoggedIn && !PUBLIC_PAGES.includes(page)) {
-      destination = 'login';
-    } else if (page === 'admin-panel' && (!isLoggedIn || user.role !== 'admin')) {
-      destination = 'dashboard';
-    }
-
-    setCurrentPage(destination);
+  const navigate = useCallback((page) => {
+    const PAGE_MAP = {
+      landing: '/',
+      login: '/login',
+      register: '/register',
+      'forgot-password': '/forgot-password',
+      about: '/about',
+      contact: '/contact',
+      dashboard: '/dashboard',
+      'my-account': '/my-account',
+      'bandwidth-monitor': '/bandwidth-monitor',
+      'wifi-registration': '/wifi-registration',
+      'admin-panel': '/admin-panel',
+    };
+    const path = PAGE_MAP[page] || '/';
+    navigateRouter(path);
     window.scrollTo(0, 0);
-  };
+  }, [navigateRouter]);
 
-  // Login handler
-  const handleLogin = (data) => {
+  const handleUpdateUser = useCallback((updatedData) => {
+    const full = authService.updateStoredUser(updatedData);
+    setUser(buildUser(full));
+  }, []);
+
+  const handleLogin = useCallback((data) => {
+    setUser(buildUser(data.user));
     setIsLoggedIn(true);
-    const userData = data.user || data;
-    setUser({
-      schoolId: userData.schoolId || '',
-      role: userData.role === 'ADMIN' ? 'admin' : 'student',
-      firstName: userData.firstName || '',
-      lastName: userData.lastName || '',
-      email: userData.email || '',
-      course: userData.course || '',
-      year: userData.year || '',
-      contactNumber: userData.contactNumber || '',
-    });
-    navigate('dashboard');
-  };
+    const role = data.user?.role;
+    navigate(role === 'admin' ? 'admin-panel' : 'dashboard');
+  }, [navigate]);
 
-  // Register handler
-  const handleRegister = (data) => {
+  const handleRegister = useCallback((data) => {
+    setUser(buildUser(data.user));
     setIsLoggedIn(true);
-    const userData = data.user || data;
-    setUser({
-      schoolId: userData.schoolId || '',
-      role: 'student',
-      firstName: userData.firstName || '',
-      lastName: userData.lastName || '',
-      email: userData.email || '',
-      course: userData.course || '',
-      year: userData.year || '',
-      contactNumber: userData.contactNumber || '',
-    });
     navigate('dashboard');
-  };
+  }, [navigate]);
 
-  // Logout
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     authService.logout();
     setIsLoggedIn(false);
-    setUser({ schoolId: '', role: '', firstName: '', lastName: '', email: '', course: '', year: '', contactNumber: '' });
+    setUser({ ...EMPTY_USER });
     navigate('landing');
-  };
+  }, [navigate]);
 
-  const renderPage = () => {
-const userRole = user.role;
-    const userDisplayName = user.firstName ? `${user.firstName} ${user.lastName}` : user.schoolId;
-
-    switch (currentPage) {
-      case 'landing':
-        return <LandingPage onNavigate={navigate} />;
-
-      case 'login':
-        return <LoginPage onNavigate={navigate} onLogin={handleLogin} />;
-
-      case 'register':
-        return <RegisterPage onNavigate={navigate} onRegister={handleRegister} />;
-
-      case 'forgot-password':
-        return <ForgotPasswordPage onNavigate={navigate} />;
-
-      case 'about':
-        return <AboutPage onNavigate={navigate} />;
-
-      case 'contact':
-        return <ContactPage onNavigate={navigate} />;
-
-      case 'dashboard':
-        if (!isLoggedIn) return null;
-        return (
-          <DashboardPage
-            onNavigate={navigate}
-            onLogout={handleLogout}
-            onUpdateUser={handleUpdateUser}
-            userName={userDisplayName}
-            userRole={userRole}
-            user={user}
-          />
-        );
-
-      case 'my-account':
-        if (!isLoggedIn) return null;
-        return (
-          <MyAccountPage
-            onNavigate={navigate}
-            onLogout={handleLogout}
-            onUpdateUser={handleUpdateUser}
-            userName={userDisplayName}
-            userRole={userRole}
-            user={user}
-          />
-        );
-
-      case 'bandwidth-monitor':
-        if (!isLoggedIn) return null;
-        return (
-          <BandwidthMonitorPage
-            onNavigate={navigate}
-            onLogout={handleLogout}
-            userName={userDisplayName}
-            userRole={userRole}
-          />
-        );
-
-      case 'wifi-registration':
-        if (!isLoggedIn) return null;
-        return (
-          <WifiRegistrationPage
-            onNavigate={navigate}
-            onLogout={handleLogout}
-            userName={userDisplayName}
-            userRole={userRole}
-          />
-        );
-
-      case 'admin-panel':
-        if (!isLoggedIn || user.role !== 'admin') return null;
-        return (
-          <AdminDashboardPage
-            onNavigate={navigate}
-            onLogout={handleLogout}
-          />
-        );
-
-      default:
-        return <LandingPage onNavigate={navigate} />;
+  useEffect(() => {
+    if (isLoggedIn && location.pathname === '/') {
+      navigateRouter('/dashboard');
     }
-  };
+  }, [isLoggedIn, location.pathname, navigateRouter]);
 
-  return <div style={{ minHeight: '100vh' }}>{renderPage()}</div>;
+  if (loading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#1a0a0a', color: '#d4a843', fontFamily: 'system-ui', fontSize: '16px' }}>
+        Loading...
+      </div>
+    );
+  }
+
+  const userDisplayName = user.firstName ? `${user.firstName} ${user.lastName}` : user.schoolId;
+
+  return (
+    <div style={{ minHeight: '100vh' }}>
+      <Routes>
+        <Route path="/" element={<LandingPage onNavigate={navigate} />} />
+        <Route path="/login" element={<LoginPage onNavigate={navigate} onLogin={handleLogin} />} />
+        <Route path="/register" element={<RegisterPage onNavigate={navigate} onRegister={handleRegister} />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage onNavigate={navigate} />} />
+        <Route path="/about" element={<AboutPage onNavigate={navigate} />} />
+        <Route path="/contact" element={<ContactPage onNavigate={navigate} />} />
+
+        <Route path="/dashboard" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <DashboardPage onNavigate={navigate} onLogout={handleLogout} onUpdateUser={handleUpdateUser} userName={userDisplayName} userRole={user.role} user={user} />
+          </ProtectedRoute>
+        } />
+        <Route path="/my-account" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <MyAccountPage onNavigate={navigate} onLogout={handleLogout} onUpdateUser={handleUpdateUser} userName={userDisplayName} userRole={user.role} user={user} />
+          </ProtectedRoute>
+        } />
+        <Route path="/bandwidth-monitor" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <BandwidthMonitorPage onNavigate={navigate} onLogout={handleLogout} userName={userDisplayName} userRole={user.role} />
+          </ProtectedRoute>
+        } />
+        <Route path="/wifi-registration" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <WifiRegistrationPage onNavigate={navigate} onLogout={handleLogout} userName={userDisplayName} userRole={user.role} />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/admin/*" element={
+          <AdminRoute isLoggedIn={isLoggedIn} userRole={user.role}>
+            <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} />
+          </AdminRoute>
+        } />
+        <Route path="/network-overview" element={
+          <AdminRoute isLoggedIn={isLoggedIn} userRole={user.role}>
+            <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} />
+          </AdminRoute>
+        } />
+        <Route path="/all-users" element={
+          <AdminRoute isLoggedIn={isLoggedIn} userRole={user.role}>
+            <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} />
+          </AdminRoute>
+        } />
+        <Route path="/device-requests" element={
+          <AdminRoute isLoggedIn={isLoggedIn} userRole={user.role}>
+            <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} />
+          </AdminRoute>
+        } />
+        <Route path="/usage-reports" element={
+          <AdminRoute isLoggedIn={isLoggedIn} userRole={user.role}>
+            <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} />
+          </AdminRoute>
+        } />
+        <Route path="/access-control" element={
+          <AdminRoute isLoggedIn={isLoggedIn} userRole={user.role}>
+            <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} />
+          </AdminRoute>
+        } />
+        <Route path="/admin-panel" element={
+          <AdminRoute isLoggedIn={isLoggedIn} userRole={user.role}>
+            <AdminDashboardPage onNavigate={navigate} onLogout={handleLogout} />
+          </AdminRoute>
+        } />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
+  );
 }

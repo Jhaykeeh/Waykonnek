@@ -39,7 +39,12 @@ export default function WifiRegistrationPage({ onNavigate, onLogout, userName, u
   const [connectionStep, setConnectionStep] = useState(0);
   const [connectionDone, setConnectionDone] = useState(false);
 
-  const [vouchers, setVouchers] = useState(MOCK_VOUCHERS);
+  const [vouchers, setVouchers] = useState({
+    'CITU-2024-AAAA': { uses: 0, max: 2 },
+    'CITU-2024-BBBB': { uses: 0, max: 2 },
+    'CITU-2024-CCCC': { uses: 0, max: 2 },
+    'CITU-2024-DDDD': { uses: 0, max: 2 },
+  });
   const [toast, setToast] = useState(null);
   const showToast = useCallback((message, type = 'success') => setToast({ message, type }), []);
 
@@ -235,11 +240,6 @@ export default function WifiRegistrationPage({ onNavigate, onLogout, userName, u
               </Card>
             )}
 
-            {step === 2 && (
-              <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '11px', color: COLORS.textMuted, fontFamily: FONTS.mono }}>
-                🧪 {Object.entries(vouchers).map(([code, rec]) => `${code} (${rec.uses}/${rec.max})`).join(' · ')}
-              </p>
-            )}
           </main>
         </div>
       </div>

@@ -39,14 +39,17 @@ export default function Sidebar({
         position: 'sticky',
         top: 0,
         overflowY: 'auto',
+        overflowX: 'hidden',
         flexShrink: 0,
       }}
     >
       {/* ── User Info ── */}
-      <div style={{ padding: '24px 20px', borderBottom: `1px solid ${COLORS.gold.border}` }}>
-        <p style={{ color: COLORS.text.mutedGold, fontFamily: FONTS.primary, fontSize: '12px', margin: '0 0 4px' }}>
-          {userLabel}
-        </p>
+      <div style={{ padding: '24px 20px', borderBottom: `1px solid ${COLORS.gold.border}`, textAlign: 'center' }}>
+        {userLabel ? (
+          <p style={{ color: COLORS.text.mutedGold, fontFamily: FONTS.primary, fontSize: '12px', margin: '0 0 4px' }}>
+            {userLabel}
+          </p>
+        ) : null}
         <p style={{ color: COLORS.text.gold, fontFamily: FONTS.primary, fontSize: '16px', fontWeight: 'bold', margin: 0 }}>
           {userName}
         </p>
@@ -80,27 +83,36 @@ export default function Sidebar({
                 textAlign: 'left',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '12px',
                 transition: 'all 0.2s ease',
-                transform: isHovered && !isActive ? 'translateX(4px)' : 'translateX(0)',
               }}
             >
-              <span style={{ fontSize: '18px' }}>{item.icon}</span>
-              <span>{item.label}</span>
-              {item.badge != null && item.badge > 0 && (
-                <span style={{
-                  marginLeft: 'auto',
-                  backgroundColor: '#F44336',
-                  color: '#fff',
-                  borderRadius: '10px',
-                  padding: '2px 8px',
-                  fontSize: '11px',
-                  fontWeight: 'bold',
-                  lineHeight: '16px',
-                }}>
-                  {item.badge}
-                </span>
-              )}
+              <span
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  width: '100%',
+                  transition: 'transform 0.2s ease',
+                  transform: isHovered && !isActive ? 'translateX(4px)' : 'translateX(0)',
+                }}
+              >
+                <span style={{ fontSize: '18px' }}>{item.icon}</span>
+                <span>{item.label}</span>
+                {item.badge != null && item.badge > 0 && (
+                  <span style={{
+                    marginLeft: 'auto',
+                    backgroundColor: '#F44336',
+                    color: '#fff',
+                    borderRadius: '10px',
+                    padding: '2px 8px',
+                    fontSize: '11px',
+                    fontWeight: 'bold',
+                    lineHeight: '16px',
+                  }}>
+                    {item.badge}
+                  </span>
+                )}
+              </span>
             </button>
           );
         })}
