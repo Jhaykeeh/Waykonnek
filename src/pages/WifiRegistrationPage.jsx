@@ -9,7 +9,6 @@ import { COLORS, FONTS, APP_CONFIG, getNextDeviceNumber } from '../constants/the
 import { Button, Input, StepBar, Toast } from '../components/ui';
 import DashboardSidebar from '../components/DashboardSidebar';
 import Card from '../components/Card';
-import { MOCK_VOUCHERS } from '../data/mockData';
 
 const STEPS = ['Device Info', 'Voucher', 'Verify', 'Connected'];
 
@@ -58,7 +57,12 @@ export default function WifiRegistrationPage({ onNavigate, onLogout, userName, u
   const [connectionStep, setConnectionStep] = useState(0);
   const [connectionDone, setConnectionDone] = useState(false);
 
-  const [vouchers, setVouchers] = useState(MOCK_VOUCHERS);
+  const [vouchers, setVouchers] = useState({
+    'CITU-2024-AAAA': { uses: 0, max: 2 },
+    'CITU-2024-BBBB': { uses: 0, max: 2 },
+    'CITU-2024-CCCC': { uses: 0, max: 2 },
+    'CITU-2024-DDDD': { uses: 0, max: 2 },
+  });
   const [toast, setToast] = useState(null);
   const showToast = useCallback((message, type = 'success') => setToast({ message, type }), []);
 
@@ -269,7 +273,8 @@ export default function WifiRegistrationPage({ onNavigate, onLogout, userName, u
                     </div>
                     <InfoBox>
                       🎫 Voucher usage limit: <strong>{APP_CONFIG.VOUCHER_MAX_USES} devices per voucher</strong>.<br />
-                      Once the limit is reached, the voucher becomes invalid.
+                      Once the limit is reached, the voucher becomes invalid.<br />
+                      <strong>Available codes:</strong> {Object.keys(vouchers).join(', ')}
                     </InfoBox>
                     <div style={{ display: 'flex', gap: '10px' }}>
                       <Button variant="secondary" onClick={() => setStep(1)}>← Back</Button>
@@ -380,11 +385,6 @@ export default function WifiRegistrationPage({ onNavigate, onLogout, userName, u
               </Card>
             )}
 
-            {step === 2 && (
-              <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '11px', color: COLORS.textMuted, fontFamily: FONTS.mono }}>
-                🧪 {Object.entries(vouchers).map(([code, rec]) => `${code} (${rec.uses}/${rec.max})`).join(' · ')}
-              </p>
-            )}
           </main>
         </div>
       </div>
