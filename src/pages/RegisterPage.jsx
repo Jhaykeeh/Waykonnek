@@ -1,6 +1,8 @@
 /**
  * RegisterPage Component
  * User registration page with centered card layout.
+ * Collects only essential fields: schoolId, firstName, lastName, email, password.
+ * Course, yearLevel, and contactNumber are set later via profile (MyAccountPage).
  */
 
 import { useState } from 'react';
@@ -17,10 +19,6 @@ export default function RegisterPage({ onNavigate, onRegister }) {
     lastName: '',
     schoolId: '',
     email: '',
-    course: '',
-    year: '',
-    contactNumber: '',
-    role: 'Student',
     password: '',
     confirmPassword: '',
     agreeTerms: false,
@@ -47,9 +45,6 @@ export default function RegisterPage({ onNavigate, onRegister }) {
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
-    if (!formData.course.trim()) newErrors.course = 'Course is required';
-    if (!formData.year.trim()) newErrors.year = 'Year level is required';
-    if (!formData.contactNumber.trim()) newErrors.contactNumber = 'Contact number is required';
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
@@ -78,10 +73,6 @@ export default function RegisterPage({ onNavigate, onRegister }) {
         schoolId: formData.schoolId,
         password: formData.password,
         email: formData.email,
-        course: formData.course,
-        year: formData.year,
-        contactNumber: formData.contactNumber,
-        role: formData.role,
       });
 
       const userData = data.user || data;
@@ -103,7 +94,7 @@ export default function RegisterPage({ onNavigate, onRegister }) {
         flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: '60px 40px', backgroundColor: COLORS.bgPage,
       }}>
-        <Card style={{ width: '100%', maxWidth: '700px', padding: '0' }}>
+        <Card style={{ width: '100%', maxWidth: '560px', padding: '0' }}>
           <div style={{
             backgroundColor: COLORS.maroon.medium, padding: '24px 32px',
             borderBottom: `2px solid ${COLORS.gold.border}`, borderRadius: '12px 12px 0 0',
@@ -130,47 +121,6 @@ export default function RegisterPage({ onNavigate, onRegister }) {
 
               <Input label="Email" type="email" name="email" value={formData.email}
                 onChange={handleChange} error={errors.email} />
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <Input label="Course" name="course" placeholder="e.g. BSCS"
-                  value={formData.course} onChange={handleChange} error={errors.course} />
-                <div>
-                  <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '13px', fontWeight: 'bold', marginBottom: '6px' }}>Year Level</label>
-                  <select name="year" value={formData.year} onChange={handleChange}
-                    style={{
-                      width: '100%', padding: '11px 14px', backgroundColor: COLORS.bgInput,
-                      border: `1px solid ${COLORS.gold.border}`, borderRadius: '8px',
-                      color: COLORS.maroon.card, fontFamily: FONTS.primary, fontSize: '14px',
-                      outline: 'none', boxSizing: 'border-box',
-                    }}>
-                    <option value="">Select Year</option>
-                    <option value="1st Year">1st Year</option>
-                    <option value="2nd Year">2nd Year</option>
-                    <option value="3rd Year">3rd Year</option>
-                    <option value="4th Year">4th Year</option>
-                    <option value="5th Year">5th Year</option>
-                  </select>
-                  {errors.year && <p style={{ color: '#e53935', fontFamily: FONTS.primary, fontSize: '12px', margin: '5px 0 0' }}>{errors.year}</p>}
-                </div>
-              </div>
-
-              <Input label="Contact Number" name="contactNumber" placeholder="e.g. 09123456789"
-                value={formData.contactNumber} onChange={handleChange} error={errors.contactNumber} />
-
-              <div>
-                <label style={{ display: 'block', color: COLORS.textHeading, fontFamily: FONTS.primary, fontSize: '13px', fontWeight: 'bold', marginBottom: '6px' }}>Role</label>
-                <select name="role" value={formData.role} onChange={handleChange}
-                  style={{
-                    width: '100%', padding: '11px 14px', backgroundColor: COLORS.bgInput,
-                    border: `1px solid ${COLORS.gold.border}`, borderRadius: '8px',
-                    color: COLORS.maroon.card, fontFamily: FONTS.primary, fontSize: '14px',
-                    outline: 'none', boxSizing: 'border-box',
-                  }}>
-                  <option value="Student">Student</option>
-                  <option value="Faculty">Faculty</option>
-                  <option value="Staff">Staff</option>
-                </select>
-              </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <Input label="Password" type="password" name="password"

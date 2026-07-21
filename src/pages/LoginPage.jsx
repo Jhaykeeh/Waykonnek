@@ -86,17 +86,6 @@ export default function LoginPage({ onNavigate, onLogin }) {
             Log In
           </h2>
 
-          {/* Demo Credentials Hint */}
-          <div style={{
-            padding: '12px 16px', borderRadius: '8px',
-            backgroundColor: 'rgba(212,168,67,0.1)', border: `1px solid ${COLORS.gold.border}`,
-            marginBottom: '24px', fontSize: '13px', fontFamily: FONTS.primary, lineHeight: '1.7',
-          }}>
-            <strong style={{ color: COLORS.text.gold }}>Demo Credentials</strong><br />
-            Student: <code style={{ fontFamily: FONTS.mono, background: 'rgba(212,168,67,0.15)', padding: '1px 6px', borderRadius: '4px' }}>demo-student</code> / <code style={{ fontFamily: FONTS.mono, background: 'rgba(212,168,67,0.15)', padding: '1px 6px', borderRadius: '4px' }}>password</code><br />
-            Admin: <code style={{ fontFamily: FONTS.mono, background: 'rgba(212,168,67,0.15)', padding: '1px 6px', borderRadius: '4px' }}>demo-admin</code> / <code style={{ fontFamily: FONTS.mono, background: 'rgba(212,168,67,0.15)', padding: '1px 6px', borderRadius: '4px' }}>password</code>
-          </div>
-
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {formError && (
               <div style={{

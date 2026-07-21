@@ -17,7 +17,6 @@ import UsageReportsPanel from '../components/admin/UsageReportsPanel';
 import AdminStudentsPanel from '../components/admin/AdminStudentsPanel';
 import AccessControlPanel from '../components/admin/AccessControlPanel';
 import AdminSettingsPanel from '../components/admin/AdminSettingsPanel';
-import { MOCK_USERS, MOCK_REQUESTS } from '../data/mockData';
 
 export default function AdminDashboardPage({ onLogout }) {
   const navigateRouter = useNavigate();
@@ -45,8 +44,8 @@ export default function AdminDashboardPage({ onLogout }) {
     access: '/access-control',
     admin: '/admin-panel',
   };
-  const [requests, setRequests] = useState(MOCK_REQUESTS);
-  const [users, setUsers] = useState(MOCK_USERS);
+  const [requests, setRequests] = useState([]);
+  const [users, setUsers] = useState([]);
   const [admins, setAdmins] = useState([]);
   const [logs, setLogs] = useState([]);
 
