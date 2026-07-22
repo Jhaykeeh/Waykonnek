@@ -27,13 +27,16 @@ export default function DeviceRequestsPanel({ requests, onApprove, onReject }) {
               borderBottom: idx < filtered.length - 1 ? `1px solid ${COLORS.gold.border}` : 'none',
               display: 'flex', alignItems: 'center', gap: '16px',
             }}>
-              <div style={{
-                width: '38px', height: '38px', borderRadius: '10px', flexShrink: 0,
-                backgroundColor: 'rgba(212,168,67,0.1)', border: `1px solid ${COLORS.gold.border}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px',
-              }}>
-                {req.brand === 'Apple' ? '📱' : '💻'}
-              </div>
+                <div style={{
+                  width: '38px', height: '38px', borderRadius: '10px', flexShrink: 0,
+                  backgroundColor: req.brand === 'Apple' ? 'rgba(212,168,67,0.15)' : 'rgba(100,100,100,0.1)',
+                  border: `1px solid ${req.brand === 'Apple' ? COLORS.gold.border : 'rgba(100,100,100,0.2)'}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <span style={{ fontSize: '10px', fontWeight: 'bold', color: req.brand === 'Apple' ? COLORS.text.gold : COLORS.textMuted, fontFamily: FONTS.primary, letterSpacing: '0.05em' }}>
+                    {req.brand === 'Apple' ? 'iOS' : 'DEV'}
+                  </span>
+                </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: '14px', fontWeight: 'bold', color: COLORS.textBody, fontFamily: FONTS.primary }}>
                   {req.name} · <span style={{ fontFamily: FONTS.mono, fontSize: '12px', color: COLORS.textMuted }}>{req.schoolId}</span>
@@ -43,7 +46,7 @@ export default function DeviceRequestsPanel({ requests, onApprove, onReject }) {
                 </div>
                 {req.voucherCode && (
                   <div style={{ fontSize: '12px', color: COLORS.text.gold, fontFamily: FONTS.mono, marginTop: '4px' }}>
-                    🎫 Voucher: {req.voucherCode}
+                    Voucher: {req.voucherCode}
                   </div>
                 )}
               </div>

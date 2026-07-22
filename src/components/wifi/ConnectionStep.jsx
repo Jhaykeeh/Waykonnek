@@ -9,11 +9,11 @@ export default function ConnectionStep({
 }) {
   if (!connectionDone) {
     const items = [
-      { icon: '🔍', text: 'Scanning network...' },
-      { icon: '🎫', text: 'Verifying voucher...' },
-      { icon: '📡', text: 'Assigning IP address...' },
-      { icon: '🔗', text: `Connecting to ${APP_CONFIG.NETWORK_NAME}...` },
-      { icon: registrationStatus === 'PENDING' ? '📨' : '✅', text: registrationStatus === 'PENDING' ? 'Request submitted!' : 'Connected!' },
+      { icon: '...', text: 'Scanning network...' },
+      { icon: '...', text: 'Verifying voucher...' },
+      { icon: '...', text: 'Assigning IP address...' },
+      { icon: '...', text: `Connecting to ${APP_CONFIG.NETWORK_NAME}...` },
+      { icon: registrationStatus === 'PENDING' ? '...' : 'OK', text: registrationStatus === 'PENDING' ? 'Request submitted!' : 'Connected!' },
     ];
     return (
       <>
@@ -41,7 +41,9 @@ export default function ConnectionStep({
 
   return (
     <>
-      <div style={{ fontSize: '72px', marginBottom: '16px' }}>{registrationStatus === 'PENDING' ? '⏳' : '✅'}</div>
+      <div style={{ width: '80px', height: '80px', borderRadius: '50%', backgroundColor: registrationStatus === 'PENDING' ? 'rgba(255,193,7,0.15)' : 'rgba(76,175,80,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: `3px solid ${registrationStatus === 'PENDING' ? '#FFC107' : '#4CAF50'}` }}>
+        <span style={{ fontSize: '18px', fontWeight: 'bold', color: registrationStatus === 'PENDING' ? '#FFC107' : '#4CAF50', fontFamily: FONTS.primary }}>{registrationStatus === 'PENDING' ? 'PEND' : 'DONE'}</span>
+      </div>
       <h2 style={{ fontSize: '24px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '10px' }}>
         {registrationStatus === 'PENDING' ? 'Submitted for Admin Review' : 'Device Registered!'}
       </h2>
@@ -54,13 +56,14 @@ export default function ConnectionStep({
       </p>
       <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '32px' }}>
         {[
-          { icon: '📶', label: APP_CONFIG.NETWORK_NAME },
-          { icon: '⚡', label: `${APP_CONFIG.MONTHLY_BANDWIDTH_CAP_GB} GB / month` },
-          { icon: '🔒', label: 'Encrypted' },
-          { icon: '📱', label: `${brand} ${model}` },
+          { icon: 'NET', label: APP_CONFIG.NETWORK_NAME },
+          { icon: 'BW', label: `${APP_CONFIG.MONTHLY_BANDWIDTH_CAP_GB} GB / month` },
+          { icon: 'ENC', label: 'Encrypted' },
+          { icon: 'DEV', label: `${brand} ${model}` },
         ].map(({ icon, label }) => (
-          <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '7px 14px', backgroundColor: COLORS.bgSection, border: `1px solid ${COLORS.gold.border}`, borderRadius: '20px', fontSize: '12px', color: COLORS.textBody, fontFamily: FONTS.primary }}>
-            {icon} {label}
+          <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '7px 14px', backgroundColor: COLORS.bgSection, border: `1px solid ${COLORS.gold.border}`, borderRadius: '20px', fontSize: '12px', color: COLORS.textBody, fontFamily: FONTS.primary }}>
+            <span style={{ fontSize: '10px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary, backgroundColor: 'rgba(212,168,67,0.15)', padding: '2px 6px', borderRadius: '4px' }}>{icon}</span>
+            {label}
           </div>
         ))}
       </div>

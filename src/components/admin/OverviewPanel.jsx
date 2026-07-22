@@ -45,7 +45,7 @@ export default function OverviewPanel({ users, pending, approved }) {
             display: 'flex', alignItems: 'center', gap: '16px',
           }}>
             <div style={{ fontSize: '20px', width: '28px', textAlign: 'center', color: idx === 0 ? '#FFD700' : COLORS.textMuted }}>
-              {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx + 1}.`}
+              {idx === 0 ? '1st' : idx === 1 ? '2nd' : idx === 2 ? '3rd' : `${idx + 1}.`}
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: '14px', fontWeight: 'bold', color: COLORS.textBody, fontFamily: FONTS.primary }}>{user.name}</div>

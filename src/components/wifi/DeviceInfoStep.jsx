@@ -36,7 +36,7 @@ export default function DeviceInfoStep({
         {errors.model && <p style={{ color: '#e53935', fontFamily: FONTS.primary, fontSize: '12px', margin: '5px 0 0' }}>{errors.model}</p>}
       </div>
       <InfoBox>
-        ℹ️ You may register up to <strong>{maxDevices} devices</strong> per account.
+        You may register up to <strong>{maxDevices} devices</strong> per account.
         Your <strong>1st device</strong> is auto-approved. Your <strong>2nd device</strong> requires admin approval.
       </InfoBox>
       <Button type="submit" fullWidth padding="13px">Next: Enter Voucher →</Button>

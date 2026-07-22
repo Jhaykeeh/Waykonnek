@@ -20,7 +20,9 @@ export default function VoucherStep({
         </p>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', borderRadius: '8px', backgroundColor: 'rgba(212,168,67,0.07)', border: `1px solid ${COLORS.gold.border}` }}>
-        <span style={{ fontSize: '20px' }}>{brand === 'Apple' ? '📱' : '💻'}</span>
+        <div style={{ width: '36px', height: '36px', borderRadius: '8px', backgroundColor: brand === 'Apple' ? 'rgba(212,168,67,0.15)' : 'rgba(100,100,100,0.1)', border: `1px solid ${brand === 'Apple' ? COLORS.gold.border : 'rgba(100,100,100,0.2)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontSize: '10px', fontWeight: 'bold', color: brand === 'Apple' ? COLORS.text.gold : COLORS.textMuted, fontFamily: FONTS.primary }}>{brand === 'Apple' ? 'iOS' : 'DEV'}</span>
+        </div>
         <div>
           <div style={{ fontSize: '13px', fontWeight: 'bold', color: COLORS.textBody, fontFamily: FONTS.primary }}>{brand} {model}</div>
           <div style={{ fontSize: '11px', color: COLORS.textMuted, fontFamily: FONTS.primary }}>Device to be registered</div>
@@ -36,7 +38,7 @@ export default function VoucherStep({
         {voucherError && <p style={{ color: '#e53935', fontFamily: FONTS.primary, fontSize: '12px', margin: '5px 0 0' }}>{voucherError}</p>}
       </div>
       <InfoBox>
-        🎫 Voucher usage limit: <strong>{APP_CONFIG.VOUCHER_MAX_USES} devices per voucher</strong>.<br />
+        Voucher usage limit: <strong>{APP_CONFIG.VOUCHER_MAX_USES} devices per voucher</strong>.<br />
         Once the limit is reached, the voucher becomes invalid.
       </InfoBox>
       <div style={{ display: 'flex', gap: '10px' }}>

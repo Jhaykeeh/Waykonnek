@@ -26,7 +26,7 @@ export default function AdminSettingsPanel() {
           backgroundColor: 'rgba(76,175,80,0.15)', border: '1px solid #4CAF50',
           borderRadius: '10px', color: '#4CAF50', fontFamily: FONTS.primary, fontSize: '14px',
         }}>
-          ✅ Settings saved successfully!
+          Settings saved successfully!
         </div>
       )}
 
@@ -58,7 +58,7 @@ export default function AdminSettingsPanel() {
         </div>
 
         <div style={{ marginTop: '24px', display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={handleSave} padding="11px 28px">💾 Save Settings</Button>
+          <Button onClick={handleSave} padding="11px 28px">Save Settings</Button>
         </div>
       </Card>
     </>

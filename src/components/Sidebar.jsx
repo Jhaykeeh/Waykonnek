@@ -96,7 +96,14 @@ export default function Sidebar({
                   transform: isHovered && !isActive ? 'translateX(4px)' : 'translateX(0)',
                 }}
               >
-                <span style={{ fontSize: '18px' }}>{item.icon}</span>
+                <span style={{
+                  width: '30px', height: '30px', borderRadius: '7px',
+                  backgroundColor: isActive ? 'rgba(212,168,67,0.2)' : 'rgba(212,168,67,0.06)',
+                  border: `1px solid ${isActive ? COLORS.gold.primary : 'transparent'}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  fontSize: '9px', fontWeight: 'bold', color: isActive ? COLORS.text.gold : COLORS.text.mutedGold,
+                  fontFamily: FONTS.primary, letterSpacing: '0.05em',
+                }}>{item.icon}</span>
                 <span>{item.label}</span>
                 {item.badge != null && item.badge > 0 && (
                   <span style={{
@@ -138,7 +145,7 @@ export default function Sidebar({
             transition: 'all 0.2s ease',
           }}
         >
-          🚪 {logoutLabel}
+          {logoutLabel}
         </button>
       </div>
     </aside>

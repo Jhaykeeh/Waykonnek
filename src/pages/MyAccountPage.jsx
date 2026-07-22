@@ -193,7 +193,7 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
           )}
 
           {/* Profile Information */}
-          <SectionHeading icon="👤">Profile Information</SectionHeading>
+          <SectionHeading>Profile Information</SectionHeading>
           <Card style={{ marginBottom: '32px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <span style={{ fontSize: '18px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary }}>Personal Details</span>
@@ -228,7 +228,7 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
           </Card>
 
           {/* Change Password */}
-          <SectionHeading icon="🔒">Security</SectionHeading>
+          <SectionHeading>Security</SectionHeading>
           <Card style={{ marginBottom: '32px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <span style={{ fontSize: '18px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary }}>Change Password</span>
@@ -262,7 +262,7 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
           </Card>
 
           {/* Notification Preferences */}
-          <SectionHeading icon="🔔">Notification Preferences</SectionHeading>
+          <SectionHeading>Notification Preferences</SectionHeading>
           <Card style={{ padding: '0' }}>
             {Object.entries(notificationLabels).map(([key, { label, desc }], idx, arr) => (
               <div key={key} style={{
@@ -280,7 +280,7 @@ export default function MyAccount({ onNavigate, onLogout, onUpdateUser, userName
           </Card>
 
           {/* Account Actions */}
-          <SectionHeading icon="⚡" style={{ marginTop: '32px' }}>Account Actions</SectionHeading>
+          <SectionHeading style={{ marginTop: '32px' }}>Account Actions</SectionHeading>
           <Card>
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
               <Button variant="secondary" onClick={onLogout}>Sign Out</Button>

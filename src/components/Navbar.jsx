@@ -17,15 +17,16 @@ export default function Navbar({ currentPage, onNavigate }) {
     <nav
       style={{
         backgroundColor: COLORS.maroon.dark,
-        borderBottom: `2px solid ${COLORS.gold.border}`,
-        padding: '16px 40px',
+        borderBottom: `1px solid ${COLORS.gold.border}`,
+        padding: '14px 32px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         position: 'sticky',
         top: 0,
         zIndex: 1000,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+        boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+        backdropFilter: 'blur(8px)',
       }}
     >
       {/* Logo */}
@@ -64,18 +65,18 @@ export default function Navbar({ currentPage, onNavigate }) {
               onMouseEnter={() => setHoveredLink(link.key)}
               onMouseLeave={() => setHoveredLink(null)}
               style={{
-                background: 'none',
+                background: isActive ? 'rgba(212, 168, 67, 0.14)' : 'transparent',
                 border: 'none',
                 color: isActive ? COLORS.text.gold : COLORS.text.white,
                 fontFamily: FONTS.primary,
-                fontSize: '16px',
-                fontWeight: isActive ? 'bold' : 'normal',
+                fontSize: '15px',
+                fontWeight: isActive ? '700' : '500',
                 cursor: 'pointer',
-                padding: '8px 16px',
-                borderBottom: isActive ? `2px solid ${COLORS.gold.primary}` : '2px solid transparent',
-                transition: 'all 0.3s ease',
-                transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
-                opacity: isHovered ? 0.9 : 1,
+                padding: '8px 14px',
+                borderRadius: '999px',
+                transition: 'all 0.25s ease',
+                transform: isHovered ? 'translateY(-1px)' : 'translateY(0)',
+                opacity: isHovered ? 0.95 : 1,
               }}
             >
               {link.label}

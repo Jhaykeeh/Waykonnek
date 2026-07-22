@@ -32,7 +32,6 @@ export default function DashboardPage({ onNavigate, onLogout, onUpdateUser, user
                 id: d.id,
                 brand: d.brand,
                 model: d.model,
-                mac: d.macAddress || 'N/A',
                 status: d.approvalStatus || (d.active ? 'APPROVED' : 'PENDING'),
               }))
             : []
@@ -119,7 +118,7 @@ export default function DashboardPage({ onNavigate, onLogout, onUpdateUser, user
           {/* Welcome */}
           <div style={{ marginBottom: '24px' }}>
             <h2 style={{ fontSize: '26px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '4px' }}>
-              Welcome back, {userName} 👋
+              Welcome back, {userName}
             </h2>
             <p style={{ fontSize: '14px', color: COLORS.textMuted, fontFamily: FONTS.primary, margin: 0 }}>
               Devices Registered:&nbsp;
@@ -164,7 +163,7 @@ export default function DashboardPage({ onNavigate, onLogout, onUpdateUser, user
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
               }}
             >
-              ➕ Register New Device
+              + Register New Device
             </button>
             <button
               onClick={() => onNavigate('bandwidth-monitor')}
@@ -176,7 +175,7 @@ export default function DashboardPage({ onNavigate, onLogout, onUpdateUser, user
                 display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
               }}
             >
-              📊 View Bandwidth
+              View Bandwidth
             </button>
           </div>
 
@@ -191,7 +190,7 @@ export default function DashboardPage({ onNavigate, onLogout, onUpdateUser, user
 
             {!loading && devices.length === 0 && (
               <div style={{ padding: '48px 24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '48px', opacity: 0.5 }}>📱</span>
+                <span style={{ fontSize: '48px', opacity: 0.3, fontFamily: FONTS.primary, fontWeight: 'bold', color: COLORS.text.gold }}>+</span>
                 <div style={{ fontSize: '16px', fontWeight: 'bold', color: COLORS.textBody, fontFamily: FONTS.primary }}>No Devices Registered</div>
                 <div style={{ fontSize: '13px', color: COLORS.textMuted, fontFamily: FONTS.primary, maxWidth: '320px', lineHeight: '1.6' }}>
                   You haven't registered any devices yet. Click the button below to register your first device to the {APP_CONFIG.NETWORK_NAME} network.
@@ -205,7 +204,7 @@ export default function DashboardPage({ onNavigate, onLogout, onUpdateUser, user
                     fontFamily: FONTS.primary, fontWeight: 'bold', fontSize: '14px', cursor: 'pointer',
                   }}
                 >
-                  ➕ Register Your First Device
+                  + Register Your First Device
                 </button>
               </div>
             )}
@@ -218,18 +217,17 @@ export default function DashboardPage({ onNavigate, onLogout, onUpdateUser, user
               }}>
                 <div style={{
                   width: '42px', height: '42px', borderRadius: '10px',
-                  backgroundColor: 'rgba(212,168,67,0.1)',
-                  border: `1px solid ${COLORS.gold.border}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0,
+                  backgroundColor: device.brand === 'Apple' ? 'rgba(212,168,67,0.15)' : 'rgba(100,100,100,0.1)',
+                  border: `1px solid ${device.brand === 'Apple' ? COLORS.gold.border : 'rgba(100,100,100,0.2)'}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                 }}>
-                  {device.brand === 'Apple' ? '📱' : '💻'}
+                  <span style={{ fontSize: '11px', fontWeight: 'bold', color: device.brand === 'Apple' ? COLORS.text.gold : COLORS.textMuted, fontFamily: FONTS.primary, letterSpacing: '0.05em' }}>
+                    {device.brand === 'Apple' ? 'iOS' : 'DEV'}
+                  </span>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: '15px', fontWeight: 'bold', color: COLORS.textBody, fontFamily: FONTS.primary }}>
                     {device.brand} {device.model}
-                  </div>
-                  <div style={{ fontSize: '12px', color: COLORS.textMuted, fontFamily: FONTS.mono }}>
-                    MAC: {device.mac}
                   </div>
                 </div>
                 <Badge status={device.status} />
@@ -256,7 +254,7 @@ export default function DashboardPage({ onNavigate, onLogout, onUpdateUser, user
                 padding: '12px 24px', textAlign: 'center', borderTop: `1px solid ${COLORS.gold.border}`,
                 fontSize: '13px', color: COLORS.textMuted, fontFamily: FONTS.primary,
               }}>
-                🔒 Maximum devices reached ({maxDevices}/{maxDevices}). Contact IT support to change a device.
+                Maximum devices reached ({maxDevices}/{maxDevices}). Contact IT support to change a device.
               </div>
             )}
           </Card>

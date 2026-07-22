@@ -35,12 +35,6 @@ export default function LoginPage({ onNavigate, onLogin }) {
     try {
       const data = await authService.login({ schoolId, password });
       onLogin(data);
-      const loginRole = data.user?.role || data.role;
-      if (loginRole === 'ADMIN') {
-        onNavigate('admin-panel');
-      } else {
-        onNavigate('dashboard');
-      }
     } catch (err) {
       const msg = err.response?.data?.message || 'Login failed. Please check your credentials.';
       setFormError(msg);
@@ -116,9 +110,10 @@ export default function LoginPage({ onNavigate, onLogin }) {
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
                   style={{
                     position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', color: COLORS.textMuted, cursor: 'pointer', fontSize: '18px', padding: '4px',
+                    background: 'none', border: 'none', color: COLORS.textMuted, cursor: 'pointer', fontSize: '12px', padding: '4px 8px',
+                    fontFamily: FONTS.primary, fontWeight: 'bold', letterSpacing: '0.05em',
                   }}>
-                  {showPassword ? '🙈' : '👁️'}
+                  {showPassword ? 'HIDE' : 'SHOW'}
                 </button>
               </div>
               {errors.password && (

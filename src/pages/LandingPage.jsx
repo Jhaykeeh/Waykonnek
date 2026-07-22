@@ -11,12 +11,12 @@ import { Button } from '../components/ui';
 
 export default function LandingPage({ onNavigate }) {
   const features = [
-    { icon: '📶', title: 'WiFi Registration', desc: 'Quick and easy device registration for campus network access.' },
-    { icon: '📊', title: 'Real-Time Monitoring', desc: 'Track bandwidth usage and network performance as it happens.' },
-    { icon: '⚖️', title: 'Fair Usage Policy', desc: 'Keep the network fair and fast for every student and staff member.' },
-    { icon: '📈', title: 'Detailed Reports', desc: 'Get actionable insights from bandwidth and device analytics.' },
-    { icon: '🔐', title: 'Admin Control Panel', desc: 'Manage devices, users, and policies from one central dashboard.' },
-    { icon: '🔔', title: 'Instant Alerts', desc: 'Receive timely notifications for network issues and threshold events.' },
+    { icon: 'WiFi', title: 'WiFi Registration', desc: 'Quick and easy device registration for campus network access.' },
+    { icon: 'Stats', title: 'Real-Time Monitoring', desc: 'Track bandwidth usage and network performance as it happens.' },
+    { icon: 'Policy', title: 'Fair Usage Policy', desc: 'Keep the network fair and fast for every student and staff member.' },
+    { icon: 'Reports', title: 'Detailed Reports', desc: 'Get actionable insights from bandwidth and device analytics.' },
+    { icon: 'Admin', title: 'Admin Control Panel', desc: 'Manage devices, users, and policies from one central dashboard.' },
+    { icon: 'Alerts', title: 'Instant Alerts', desc: 'Receive timely notifications for network issues and threshold events.' },
   ];
 
   const steps = [
@@ -29,57 +29,57 @@ export default function LandingPage({ onNavigate }) {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar currentPage="landing" onNavigate={onNavigate} />
 
-      <section style={{ background: COLORS.backgrounds.gradient, padding: '80px 24px 40px', color: COLORS.text.white }}>
-        <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'grid', gap: '32px', gridTemplateColumns: '1.4fr 1fr', alignItems: 'center' }}>
+      <section style={{ background: COLORS.backgrounds.gradient, padding: '80px 24px 56px', color: COLORS.text.white }}>
+        <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'grid', gap: '32px', gridTemplateColumns: '1.3fr 1fr', alignItems: 'center' }}>
           <div style={{ textAlign: 'left' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '20px', padding: '8px 16px', borderRadius: '999px', background: 'rgba(255,255,255,0.08)', color: COLORS.text.white, fontSize: '13px', letterSpacing: '0.08em' }}>
-              <span style={{ fontSize: '18px' }}></span>
-              <span>Campus Network Optimized</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', marginBottom: '20px', padding: '8px 14px', borderRadius: '999px', background: 'rgba(255,255,255,0.10)', color: COLORS.text.white, fontSize: '13px', letterSpacing: '0.08em' }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#4CAF50' }}></span>
+              <span>Campus network management</span>
             </div>
-            <h1 style={{ fontSize: 'clamp(3rem, 4vw, 4.5rem)', lineHeight: '1.02', fontWeight: '800', marginBottom: '24px', fontFamily: FONTS.primary }}>
-              Secure, fair, and intelligent bandwidth for CITU.
+            <h1 style={{ fontSize: 'clamp(2.7rem, 4vw, 4.2rem)', lineHeight: '1.05', fontWeight: '800', marginBottom: '20px', fontFamily: FONTS.primary }}>
+              Secure, fair, and reliable bandwidth for CITU.
             </h1>
-            <p style={{ maxWidth: '680px', fontSize: '1.05rem', lineHeight: '1.8', color: 'rgba(255,255,255,0.86)', marginBottom: '32px' }}>
+            <p style={{ maxWidth: '680px', fontSize: '1.01rem', lineHeight: '1.8', color: 'rgba(255,255,255,0.86)', marginBottom: '30px' }}>
               Waykonnek-CITU brings streamlined device registration, network monitoring, and administrator control together in one polished campus platform.
               Manage connectivity with confidence and keep the whole community online.
             </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
-              <Button onClick={() => onNavigate('register')} padding="16px 32px" style={{ fontSize: '16px' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px' }}>
+              <Button onClick={() => onNavigate('register')} padding="14px 28px" style={{ fontSize: '15px' }}>
                 Get Started
               </Button>
-              <Button variant="secondary" onClick={() => onNavigate('about')} padding="16px 32px" style={{ fontSize: '16px' }}>
+              <Button variant="secondary" onClick={() => onNavigate('about')} padding="14px 28px" style={{ fontSize: '15px' }}>
                 Learn More
               </Button>
             </div>
           </div>
 
-          <Card style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.16)', padding: '32px', backdropFilter: 'blur(14px)' }}>
+          <Card style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.16)', padding: '30px', backdropFilter: 'blur(14px)', borderRadius: '24px' }}>
             <div style={{ display: 'grid', gap: '24px' }}>
               <div>
-                <p style={{ margin: 0, fontSize: '14px', color: COLORS.text.mutedGold, textTransform: 'uppercase', letterSpacing: '0.18em' }}>
+                <p style={{ margin: 0, fontSize: '13px', color: COLORS.text.mutedGold, textTransform: 'uppercase', letterSpacing: '0.18em' }}>
                   Campus network at a glance
                 </p>
-                <h2 style={{ margin: '12px 0 0', fontSize: '28px', color: COLORS.text.heading, fontFamily: FONTS.primary }}>Your network, simplified.</h2>
+                <h2 style={{ margin: '10px 0 0', fontSize: '26px', color: COLORS.text.heading, fontFamily: FONTS.primary }}>Your network, simplified.</h2>
               </div>
 
-              <div style={{ display: 'grid', gap: '18px' }}>
+              <div style={{ display: 'grid', gap: '12px' }}>
                 {[
                   { label: 'Connected Users', value: APP_CONFIG.TOTAL_USERS.toLocaleString() },
                   { label: 'Network Capacity', value: `${APP_CONFIG.TOTAL_BANDWIDTH_GBPBS} Gbps` },
                   { label: 'Registered Devices', value: APP_CONFIG.TOTAL_REGISTERED_DEVICES.toLocaleString() },
                 ].map((item, idx) => (
-                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', padding: '18px 20px', borderRadius: '16px', background: 'rgba(255,255,255,0.08)' }}>
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', padding: '14px 16px', borderRadius: '14px', background: 'rgba(255,255,255,0.08)' }}>
                     <span style={{ color: COLORS.text.mutedGold, fontSize: '14px' }}>{item.label}</span>
-                    <strong style={{ color: COLORS.text.white, fontSize: '18px' }}>{item.value}</strong>
+                    <strong style={{ color: COLORS.text.white, fontSize: '16px' }}>{item.value}</strong>
                   </div>
                 ))}
               </div>
 
-              <div style={{ display: 'grid', gap: '12px', background: 'rgba(255,255,255,0.06)', borderRadius: '16px', padding: '20px' }}>
+              <div style={{ display: 'grid', gap: '12px', background: 'rgba(255,255,255,0.06)', borderRadius: '16px', padding: '18px' }}>
                 <p style={{ margin: 0, color: 'rgba(255,255,255,0.82)', fontSize: '14px', lineHeight: '1.65' }}>
                   Waykonnek-CITU supports a growing campus community with fair bandwidth policies and fast access, while giving administrators real-time insight into network health.
                 </p>
-                <Button variant="secondary" onClick={() => onNavigate('login')} padding="12px 24px" style={{ fontSize: '14px' }}>
+                <Button variant="secondary" onClick={() => onNavigate('login')} padding="12px 22px" style={{ fontSize: '14px' }}>
                   Admin Access
                 </Button>
               </div>
@@ -122,12 +122,12 @@ export default function LandingPage({ onNavigate }) {
 
           <div style={{ display: 'grid', gap: '24px', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
             {features.map((feature, idx) => (
-              <Card key={idx} style={{ padding: '28px 24px', minHeight: '240px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '64px', height: '64px', borderRadius: '18px', background: COLORS.gold.light, margin: '0 auto 20px', fontSize: '28px' }}>
-                  {feature.icon}
+              <Card key={idx} style={{ padding: '28px 24px', minHeight: '240px', borderRadius: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '54px', height: '54px', borderRadius: '14px', background: `linear-gradient(135deg, ${COLORS.maroon.medium}, ${COLORS.maroon.dark})`, margin: '0 auto 18px', border: `1px solid ${COLORS.gold.primary}` }}>
+                  <span style={{ fontSize: '16px', fontWeight: '700', color: COLORS.text.gold, fontFamily: FONTS.primary }}>{String(idx + 1).padStart(2, '0')}</span>
                 </div>
-                <h3 style={{ fontSize: '20px', fontWeight: '700', color: COLORS.textHeading, marginBottom: '14px' }}>{feature.title}</h3>
-                <p style={{ color: COLORS.textBody, fontSize: '15px', lineHeight: '1.7' }}>{feature.desc}</p>
+                <h3 style={{ fontSize: '19px', fontWeight: '700', color: COLORS.textHeading, marginBottom: '10px', textAlign: 'center' }}>{feature.title}</h3>
+                <p style={{ color: COLORS.textBody, fontSize: '15px', lineHeight: '1.7', textAlign: 'center' }}>{feature.desc}</p>
               </Card>
             ))}
           </div>

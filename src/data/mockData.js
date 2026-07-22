@@ -53,9 +53,9 @@ export const MOCK_HOURLY_HISTORY = [
 ];
 
 export const MOCK_CONNECTED_DEVICES = [
-  { icon: '📱', name: 'iPhone 14 Pro', ip: '192.168.1.102', band: '5GHz', usageGb: 1.24, pct: 38.8, color: '#4CAF50' },
-  { icon: '💻', name: 'MacBook Air', ip: '192.168.1.104', band: '5GHz', usageGb: 1.60, pct: 50.0, color: '#d4a843' },
-  { icon: '📺', name: 'Smart TV', ip: '192.168.1.108', band: '2.4GHz', usageGb: 0.36, pct: 11.2, color: '#e8a050' },
+  { icon: 'iOS', name: 'iPhone 14 Pro', ip: '192.168.1.102', band: '5GHz', usageGb: 1.24, pct: 38.8, color: '#4CAF50' },
+  { icon: 'Mac', name: 'MacBook Air', ip: '192.168.1.104', band: '5GHz', usageGb: 1.60, pct: 50.0, color: '#d4a843' },
+  { icon: 'TV', name: 'Smart TV', ip: '192.168.1.108', band: '2.4GHz', usageGb: 0.36, pct: 11.2, color: '#e8a050' },
 ];
 
 export const MOCK_WEEKLY_REPORT = [1.2, 3.4, 2.1, 4.5, 3.8, 2.9, 1.7];
