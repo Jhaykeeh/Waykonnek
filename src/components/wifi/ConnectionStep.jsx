@@ -1,12 +1,46 @@
-import { COLORS, FONTS } from '../../constants/theme';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { COLORS, FONTS, APP_CONFIG } from '../../constants/theme';
 import { Button } from '../ui';
 
-export default function ConnectionStep({
-  connectionStep, connectionDone, registrationStatus,
-  brand, model, deviceNo, voucherInfo, APP_CONFIG,
-  registeredCount, maxDevices,
-  onReset, onNavigate,
-}) {
+export default function ConnectionStep({ onNavigate, registeredCount, maxDevices }) {
+  const navigate = useNavigate();
+  const brand = localStorage.getItem('wifi_reg_brand') || '';
+  const model = localStorage.getItem('wifi_reg_model') || '';
+  const deviceNo = localStorage.getItem('wifi_reg_device_no') || '';
+  const registrationStatus = localStorage.getItem('wifi_reg_status') || '';
+  const voucherInfo = (() => {
+    const saved = localStorage.getItem('wifi_reg_voucher_info');
+    return saved ? JSON.parse(saved) : null;
+  })();
+
+  const [connectionStep, setConnectionStep] = useState(0);
+  const [connectionDone, setConnectionDone] = useState(false);
+
+  useEffect(() => {
+    if (connectionDone) return;
+    if (connectionStep >= 4) {
+      const t = setTimeout(() => setConnectionDone(true), 700);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setConnectionStep((s) => s + 1), 900);
+    return () => clearTimeout(t);
+  }, [connectionStep, connectionDone]);
+
+  const onReset = () => {
+    if (registeredCount >= maxDevices) return;
+    
+    // Clear localStorage
+    localStorage.removeItem('wifi_reg_brand');
+    localStorage.removeItem('wifi_reg_model');
+    localStorage.removeItem('wifi_reg_voucher');
+    localStorage.removeItem('wifi_reg_voucher_info');
+    localStorage.removeItem('wifi_reg_device_no');
+    localStorage.removeItem('wifi_reg_status');
+
+    navigate('/wifi-registration/Device Info');
+  };
+
   if (!connectionDone) {
     const items = [
       { icon: '...', text: 'Scanning network...' },

@@ -1,16 +1,65 @@
-import { COLORS, FONTS } from '../../constants/theme';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { COLORS, FONTS, APP_CONFIG } from '../../constants/theme';
 import { Button } from '../ui';
 import InfoBox from './InfoBox';
 
-export default function VoucherStep({
-  brand, model,
-  voucher, setVoucher,
-  voucherError, setVoucherError,
-  isChecking, APP_CONFIG,
-  focusedField, setFocusedField,
-  inputStyle,
-  onSubmit, onBack,
-}) {
+export default function VoucherStep({ showToast }) {
+  const navigate = useNavigate();
+  const brand = localStorage.getItem('wifi_reg_brand') || '';
+  const model = localStorage.getItem('wifi_reg_model') || '';
+
+  const [voucher, setVoucher] = useState(() => localStorage.getItem('wifi_reg_voucher') || '');
+  const [voucherError, setVoucherError] = useState('');
+  const [isChecking, setIsChecking] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
+
+  const vouchers = {
+    'CITU-2024-AAAA': { uses: 0, max: 2 },
+    'CITU-2024-BBBB': { uses: 0, max: 2 },
+    'CITU-2024-CCCC': { uses: 0, max: 2 },
+    'CITU-2024-DDDD': { uses: 0, max: 2 },
+  };
+
+  useEffect(() => {
+    localStorage.setItem('wifi_reg_voucher', voucher);
+  }, [voucher]);
+
+  const inputStyle = (field, hasError) => ({
+    width: '100%', padding: '11px 14px', backgroundColor: COLORS.bgInput,
+    border: `2px solid ${hasError ? '#e53935' : focusedField === field ? COLORS.gold.primary : COLORS.gold.border}`,
+    borderRadius: '8px', color: COLORS.maroon.card, fontFamily: FONTS.mono, fontSize: '14px',
+    outline: 'none', transition: 'border-color 0.25s ease', boxSizing: 'border-box',
+  });
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setVoucherError('');
+    const code = voucher.trim().toUpperCase();
+    if (!code) { setVoucherError('Please enter your voucher code.'); return; }
+
+    setIsChecking(true);
+    setTimeout(() => {
+      setIsChecking(false);
+      const savedVouchers = JSON.parse(localStorage.getItem('wifi_vouchers') || JSON.stringify(vouchers));
+      const record = savedVouchers[code];
+      if (!record) { setVoucherError('Invalid voucher code. Please check and try again.'); return; }
+      if (record.uses >= record.max) {
+        setVoucherError(`This voucher has already been used ${record.uses}/${record.max} times and is no longer valid.`);
+        return;
+      }
+      
+      const vInfo = { code, uses: record.uses, max: record.max };
+      localStorage.setItem('wifi_reg_voucher_info', JSON.stringify(vInfo));
+      navigate('/wifi-registration/Device Info/Voucher/Verify');
+      if (showToast) showToast(`Voucher ${code} is valid - ${record.max - record.uses} use(s) remaining.`);
+    }, 900);
+  };
+
+  const onBack = () => {
+    navigate('/wifi-registration/Device Info');
+  };
+
   return (
     <form onSubmit={onSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
       <div>
