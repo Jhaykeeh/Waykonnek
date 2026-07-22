@@ -92,7 +92,9 @@ export default function ForgotPasswordPage({ onNavigate }) {
           padding: '60px', display: 'flex', flexDirection: 'column', justifyContent: 'center',
           borderRight: `2px solid ${COLORS.gold.border}`,
         }}>
-          <div style={{ fontSize: '64px', marginBottom: '24px' }}>{step === 'done' ? '🔓' : '🔒'}</div>
+          <div style={{ width: '80px', height: '80px', borderRadius: '50%', backgroundColor: 'rgba(212,168,67,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px', border: `2px solid ${COLORS.gold.primary}` }}>
+            <span style={{ fontSize: '28px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary }}>{step === 'done' ? 'OK' : 'PW'}</span>
+          </div>
           <h1 style={{ fontSize: '36px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary, marginBottom: '16px' }}>
             {step === 'done' ? "You're All Set!" : 'Account Recovery'}
           </h1>
@@ -190,8 +192,8 @@ export default function ForgotPasswordPage({ onNavigate }) {
                       outline: 'none', boxSizing: 'border-box',
                     }} />
                   <button type="button" onClick={() => setShowNew(!showNew)}
-                    style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: COLORS.textMuted, cursor: 'pointer', fontSize: '18px', padding: '4px' }}>
-                    {showNew ? '🙈' : '👁️'}
+                    style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: COLORS.textMuted, cursor: 'pointer', fontSize: '12px', padding: '4px 8px', fontFamily: FONTS.primary, fontWeight: 'bold', letterSpacing: '0.05em' }}>
+                    {showNew ? 'HIDE' : 'SHOW'}
                   </button>
                 </div>
                 {errors.newPassword && <p style={{ color: '#e53935', fontFamily: FONTS.primary, fontSize: '12px', margin: '5px 0 0' }}>{errors.newPassword}</p>}
@@ -209,8 +211,8 @@ export default function ForgotPasswordPage({ onNavigate }) {
                       outline: 'none', boxSizing: 'border-box',
                     }} />
                   <button type="button" onClick={() => setShowConfirm(!showConfirm)}
-                    style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: COLORS.textMuted, cursor: 'pointer', fontSize: '18px', padding: '4px' }}>
-                    {showConfirm ? '🙈' : '👁️'}
+                    style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: COLORS.textMuted, cursor: 'pointer', fontSize: '12px', padding: '4px 8px', fontFamily: FONTS.primary, fontWeight: 'bold', letterSpacing: '0.05em' }}>
+                    {showConfirm ? 'HIDE' : 'SHOW'}
                   </button>
                 </div>
                 {errors.confirmPassword && <p style={{ color: '#e53935', fontFamily: FONTS.primary, fontSize: '12px', margin: '5px 0 0' }}>{errors.confirmPassword}</p>}

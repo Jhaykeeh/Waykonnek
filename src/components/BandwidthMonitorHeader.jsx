@@ -14,7 +14,9 @@ export default function BandwidthMonitorHeader({ userName }) {
       zIndex: 100,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-        <span style={{ fontSize: '28px' }}>📡</span>
+        <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: 'rgba(212,168,67,0.15)', border: `1px solid ${COLORS.gold.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontSize: '12px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary }}>BW</span>
+        </div>
         <span style={{ fontSize: '24px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary }}>
           Bandwidth Monitor
         </span>

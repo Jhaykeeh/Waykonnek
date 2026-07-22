@@ -11,8 +11,10 @@ export default function ProgressBar({ percentage, height = 10, color, style: ext
         width: '100%',
         height,
         borderRadius: height / 2,
-        backgroundColor: 'rgba(61,8,8,0.6)',
+        backgroundColor: 'rgba(61, 8, 8, 0.1)',
+        border: `1px solid rgba(61, 8, 8, 0.12)`,
         overflow: 'hidden',
+        boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.06)',
         ...extra,
       }}
     >

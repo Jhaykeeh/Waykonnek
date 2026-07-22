@@ -25,7 +25,7 @@ export default function AdminUsersTable({ users, onSuspend, onDelete }) {
         fontSize="12px"
         onClick={() => onDelete(row.id)}
       >
-        🗑 Delete
+        Delete
       </Button>
     ) },
   ];

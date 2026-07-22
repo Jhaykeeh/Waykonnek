@@ -227,19 +227,19 @@ export const NAV_LINKS = [
 ];
 
 export const MENU_FEATURES = [
-  { icon: '🏠', title: 'Dashboard', desc: 'Overview of your network and devices', key: 'dashboard' },
-  { icon: '📶', title: 'WiFi Registration', desc: 'Register new devices to the campus network', key: 'wifi-registration' },
-  { icon: '📊', title: 'Bandwidth Monitor', desc: 'Real-time bandwidth usage tracking', key: 'bandwidth-monitor' },
-  { icon: '👤', title: 'My Account', desc: 'Manage your profile and settings', key: 'my-account' },
+  { icon: 'HOME', title: 'Dashboard', desc: 'Overview of your network and devices', key: 'dashboard' },
+  { icon: 'WIFI', title: 'WiFi Registration', desc: 'Register new devices to the campus network', key: 'wifi-registration' },
+  { icon: 'STAT', title: 'Bandwidth Monitor', desc: 'Real-time bandwidth usage tracking', key: 'bandwidth-monitor' },
+  { icon: 'USER', title: 'My Account', desc: 'Manage your profile and settings', key: 'my-account' },
 ];
 
 export const ADMIN_SIDEBAR_ITEMS = [
-  { icon: '📊', label: 'Network Overview', key: 'overview' },
-  { icon: '👥', label: 'All Users', key: 'users' },
-  { icon: '📱', label: 'Device Requests', key: 'devices' },
-  { icon: '📈', label: 'Usage Reports', key: 'reports' },
-  { icon: '🔐', label: 'Access Control', key: 'access' },
-  { icon: '⚙️', label: 'Admin Panel', key: 'admin' },
+  { icon: 'STAT', label: 'Network Overview', key: 'overview' },
+  { icon: 'USER', label: 'All Users', key: 'users' },
+  { icon: 'DEV', label: 'Device Requests', key: 'devices' },
+  { icon: 'RPT', label: 'Usage Reports', key: 'reports' },
+  { icon: 'ACL', label: 'Access Control', key: 'access' },
+  { icon: 'SET', label: 'Admin Panel', key: 'admin' },
 ];
 
 // ── Device helpers ─────────────────────────────────────────────────

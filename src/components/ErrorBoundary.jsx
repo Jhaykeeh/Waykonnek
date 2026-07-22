@@ -37,7 +37,9 @@ export default class ErrorBoundary extends Component {
             backgroundColor: COLORS.maroon.card, borderRadius: '12px',
             border: `1px solid ${COLORS.gold.border}`, padding: '48px 32px',
           }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
+            <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(244,67,54,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: '2px solid #F44336' }}>
+              <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#F44336' }}>!</span>
+            </div>
             <h2 style={{
               fontSize: '24px', fontWeight: 'bold', color: COLORS.textHeading,
               fontFamily: FONTS.primary, marginBottom: '12px',

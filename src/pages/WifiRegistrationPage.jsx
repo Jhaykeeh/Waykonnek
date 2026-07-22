@@ -98,18 +98,18 @@ export default function WifiRegistrationPage({ onNavigate, onLogout, userName, u
       }
       setVoucherInfo({ code, uses: record.uses, max: record.max });
       setStep(3);
-      showToast(`🎫 Voucher ${code} is valid — ${record.max - record.uses} use(s) remaining.`);
+      showToast(`Voucher ${code} is valid - ${record.max - record.uses} use(s) remaining.`);
     }, 900);
   };
 
   const handleConfirm = async () => {
     if (registeredCount >= maxDevices) {
-      showToast(`⚠️ Maximum devices (${maxDevices}) already registered. Contact the dean's office.`, 'error');
+      showToast(`Maximum devices (${maxDevices}) already registered. Contact the dean's office.`, 'error');
       return;
     }
     const code = voucherInfo?.code;
     const record = code ? vouchers[code] : null;
-    if (!record) { showToast('⚠️ Voucher information is missing.', 'error'); return; }
+    if (!record) { showToast('Voucher information is missing.', 'error'); return; }
 
     const needsReview = record.uses >= 1;
     const nextDeviceNo = getNextDeviceNumber(registeredCount);
@@ -139,12 +139,12 @@ export default function WifiRegistrationPage({ onNavigate, onLogout, userName, u
 
       const remaining = record.max - updatedUses;
       if (remaining === 0) {
-        showToast(`✅ Voucher ${code} has reached its maximum uses (${updatedUses}/${record.max}).`, 'warning');
+        showToast(`Voucher ${code} has reached its maximum uses (${updatedUses}/${record.max}).`, 'warning');
       } else {
-        showToast(`✅ Voucher ${code} used successfully — ${remaining} use(s) remaining.`);
+        showToast(`Voucher ${code} used successfully - ${remaining} use(s) remaining.`);
       }
     } catch (err) {
-      showToast('❌ Registration failed. Please try again.', 'error');
+      showToast('Registration failed. Please try again.', 'error');
     } finally {
       setIsConnecting(false);
     }
@@ -177,7 +177,7 @@ export default function WifiRegistrationPage({ onNavigate, onLogout, userName, u
             position: 'sticky', top: 0, zIndex: 100,
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <span style={{ fontSize: '26px' }}>📶</span>
+              <span style={{ fontSize: '26px', color: COLORS.text.gold, fontFamily: FONTS.primary }}>WiFi</span>
               <span style={{ fontSize: '20px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary }}>WiFi Registration</span>
             </div>
             <span style={{ fontSize: '15px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary }}>{userName}</span>
@@ -188,7 +188,7 @@ export default function WifiRegistrationPage({ onNavigate, onLogout, userName, u
               <Card>
                 {registeredCount >= maxDevices && (
                   <div style={{ backgroundColor: '#FFF3E0', border: '1px solid #E65100', borderRadius: '8px', padding: '12px 16px', marginBottom: '20px', fontSize: '13px', fontFamily: FONTS.primary, color: '#BF360C', lineHeight: '1.5' }}>
-                    <strong>⚠️ Maximum devices reached.</strong> You have already registered {maxDevices} device(s). Contact the dean's office.
+                    <strong>Maximum devices reached.</strong> You have already registered {maxDevices} device(s). Contact the dean's office.
                   </div>
                 )}
                 <StepBar steps={STEPS} currentStep={step} />

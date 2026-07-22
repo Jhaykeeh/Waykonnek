@@ -31,14 +31,14 @@ export default function AboutPage({ onNavigate }) {
       <section style={{ padding: '80px 40px', backgroundColor: COLORS.bgPage }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', maxWidth: '1200px', margin: '0 auto' }}>
           <Card>
-            <h2 style={{ fontSize: '28px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '16px' }}>🎯 Our Mission</h2>
+            <h2 style={{ fontSize: '28px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '16px' }}>Our Mission</h2>
             <p style={{ fontSize: '16px', color: COLORS.textBody, fontFamily: FONTS.primary, lineHeight: '1.8' }}>
               To provide intelligent bandwidth management solutions that ensure fair, efficient, and reliable network access
               for every member of the CITU community, empowering education through seamless connectivity.
             </p>
           </Card>
           <Card>
-            <h2 style={{ fontSize: '28px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '16px' }}>👁️ Our Vision</h2>
+            <h2 style={{ fontSize: '28px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '16px' }}>Our Vision</h2>
             <p style={{ fontSize: '16px', color: COLORS.textBody, fontFamily: FONTS.primary, lineHeight: '1.8' }}>
               To become the leading campus network management system in the Philippines, setting the standard for
               equitable bandwidth distribution and real-time network monitoring in educational institutions.
@@ -94,13 +94,15 @@ export default function AboutPage({ onNavigate }) {
         <h2 style={{ textAlign: 'center', fontSize: '36px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '60px' }}>Meet the Team</h2>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', maxWidth: '800px', margin: '0 auto' }}>
           {[
-            { icon: '👨‍💻', name: 'Judd Mayuela', role: 'Lead Developer', desc: 'Responsible for system architecture, backend integration, and core functionality development.' },
-            { icon: '⚙️', name: 'Jac Cañete', role: 'Backend Engineer', desc: 'Developed server-side logic, API endpoints, and database management for the system.' },
-            { icon: '🎨', name: 'Nicco Maldo', role: 'UI/UX Designer', desc: 'Designed user interfaces, user experience flows, and visual identity of Waykonnek-CITU.' },
-            { icon: '📋', name: 'Vince Alerta', role: 'Documentation & QA', desc: 'Ensured quality assurance through systematic testing and comprehensive project documentation.' },
+            { name: 'Judd Mayuela', role: 'Lead Developer', desc: 'Responsible for system architecture, backend integration, and core functionality development.' },
+            { name: 'Jac Cañete', role: 'Backend Engineer', desc: 'Developed server-side logic, API endpoints, and database management for the system.' },
+            { name: 'Nicco Maldo', role: 'UI/UX Designer', desc: 'Designed user interfaces, user experience flows, and visual identity of Waykonnek-CITU.' },
+            { name: 'Vince Alerta', role: 'Documentation & QA', desc: 'Ensured quality assurance through systematic testing and comprehensive project documentation.' },
           ].map((member, idx) => (
             <Card key={idx} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '64px', marginBottom: '16px' }}>{member.icon}</div>
+              <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: `linear-gradient(135deg, ${COLORS.maroon.medium}, ${COLORS.maroon.dark})`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', border: `2px solid ${COLORS.gold.primary}` }}>
+                <span style={{ fontSize: '24px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary }}>{member.name.split(' ').map(n => n[0]).join('')}</span>
+              </div>
               <h3 style={{ fontSize: '22px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '8px' }}>{member.name}</h3>
               <p style={{ fontSize: '14px', color: COLORS.text.gold, fontFamily: FONTS.primary, marginBottom: '12px', fontWeight: 'bold' }}>{member.role}</p>
               <p style={{ fontSize: '14px', color: COLORS.textBody, fontFamily: FONTS.primary, lineHeight: '1.6' }}>{member.desc}</p>

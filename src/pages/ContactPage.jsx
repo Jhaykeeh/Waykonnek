@@ -52,14 +52,16 @@ export default function ContactPage({ onNavigate }) {
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '32px' }}>
               {[
-                { icon: '📍', label: 'Address', value: 'N. Bacalso Ave, Cebu City' },
-                { icon: '📞', label: 'Phone', value: '(032) 261-7741' },
-                { icon: '📧', label: 'Email', value: 'waykonnek@cit.edu' },
-                { icon: '🕒', label: 'Hours', value: 'Mon–Fri 8AM–5PM' },
+                { label: 'Address', value: 'N. Bacalso Ave, Cebu City' },
+                { label: 'Phone', value: '(032) 261-7741' },
+                { label: 'Email', value: 'waykonnek@cit.edu' },
+                { label: 'Hours', value: 'Mon–Fri 8AM–5PM' },
               ].map((item, idx) => (
                 <Card key={idx} style={{ padding: '20px', backgroundColor: COLORS.bgSection }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <div style={{ fontSize: '32px' }}>{item.icon}</div>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '10px', backgroundColor: `rgba(212,168,67,0.1)`, border: `1px solid ${COLORS.gold.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span style={{ fontSize: '11px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary, letterSpacing: '0.05em' }}>{item.label.substring(0, 2).toUpperCase()}</span>
+                    </div>
                     <div>
                       <p style={{ fontSize: '12px', color: COLORS.textMuted, fontFamily: FONTS.primary, margin: '0 0 4px 0', fontWeight: 'bold' }}>{item.label}</p>
                       <p style={{ fontSize: '16px', color: COLORS.textBody, fontFamily: FONTS.primary, margin: 0 }}>{item.value}</p>
@@ -70,7 +72,9 @@ export default function ContactPage({ onNavigate }) {
             </div>
             <Card style={{ height: '250px', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: COLORS.bgSection }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '48px', marginBottom: '12px' }}>🗺️</div>
+                <div style={{ width: '80px', height: '80px', borderRadius: '50%', backgroundColor: 'rgba(212,168,67,0.1)', border: `2px dashed ${COLORS.gold.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 'bold', color: COLORS.textMuted, fontFamily: FONTS.primary }}>MAP</span>
+                </div>
                 <p style={{ fontSize: '16px', color: COLORS.textMuted, fontFamily: FONTS.primary, margin: 0 }}>Campus Map</p>
                 <p style={{ fontSize: '12px', color: COLORS.textMuted, fontFamily: FONTS.primary, margin: '4px 0 0 0' }}>N. Bacalso Ave, Cebu City</p>
               </div>
@@ -85,7 +89,9 @@ export default function ContactPage({ onNavigate }) {
 
             {isSubmitted ? (
               <Card style={{ textAlign: 'center', padding: '60px 40px' }}>
-                <div style={{ fontSize: '64px', marginBottom: '24px' }}>✅</div>
+                <div style={{ width: '64px', height: '64px', borderRadius: '50%', backgroundColor: 'rgba(76,175,80,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', border: '2px solid #4CAF50' }}>
+                  <span style={{ fontSize: '24px', fontWeight: 'bold', color: '#4CAF50' }}>OK</span>
+                </div>
                 <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.primary, marginBottom: '16px' }}>
                   Message Sent Successfully!
                 </h3>

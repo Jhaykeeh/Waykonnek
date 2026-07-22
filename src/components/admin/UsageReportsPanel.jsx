@@ -41,12 +41,14 @@ export default function UsageReportsPanel({ users }) {
       {/* Summary Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '28px' }}>
         {[
-          { label: 'Total Usage', value: reportRange === 'week' ? '19.6 GB' : '251 GB', icon: '📊' },
-          { label: 'Peak Day', value: reportRange === 'week' ? 'Thursday' : 'May', icon: '📈' },
-          { label: 'Avg Per User', value: reportRange === 'week' ? '3.9 GB' : '50 GB', icon: '👤' },
+          { label: 'Total Usage', value: reportRange === 'week' ? '19.6 GB' : '251 GB' },
+          { label: 'Peak Day', value: reportRange === 'week' ? 'Thursday' : 'May' },
+          { label: 'Avg Per User', value: reportRange === 'week' ? '3.9 GB' : '50 GB' },
         ].map((s, i) => (
           <Card key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px', padding: '20px' }}>
-            <span style={{ fontSize: '28px' }}>{s.icon}</span>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', backgroundColor: 'rgba(212,168,67,0.1)', border: `1px solid ${COLORS.gold.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '14px', fontWeight: 'bold', color: COLORS.text.gold, fontFamily: FONTS.primary }}>{s.label.substring(0, 2).toUpperCase()}</span>
+            </div>
             <div>
               <div style={{ fontSize: '20px', fontWeight: 'bold', color: COLORS.textHeading, fontFamily: FONTS.mono }}>{s.value}</div>
               <div style={{ fontSize: '12px', color: COLORS.textMuted, fontFamily: FONTS.primary }}>{s.label}</div>
