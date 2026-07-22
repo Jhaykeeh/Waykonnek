@@ -155,7 +155,7 @@ export default function App() {
             <BandwidthMonitorPage onNavigate={navigate} onLogout={handleLogout} userName={userDisplayName} userRole={user.role} />
           </ProtectedRoute>
         } />
-        <Route path="/wifi-registration" element={
+        <Route path="/wifi-registration/*" element={
           <ProtectedRoute isLoggedIn={isLoggedIn}>
             <WifiRegistrationPage onNavigate={navigate} onLogout={handleLogout} userName={userDisplayName} userRole={user.role} />
           </ProtectedRoute>
